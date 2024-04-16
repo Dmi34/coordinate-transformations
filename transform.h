@@ -1,8 +1,5 @@
-//
-// Created by dmi34 on 4/16/24.
-//
+#pragma once
 
-#ifndef COORDINATE_TRANSFORMATIONS__TRANSFORM_H_
-#define COORDINATE_TRANSFORMATIONS__TRANSFORM_H_
+#include "immintrin.h"
 
-#endif //COORDINATE_TRANSFORMATIONS__TRANSFORM_H_
+extern "C" void TranslateI64_avx2(__m256d* x, __m256d* y, double dx, double dy);
