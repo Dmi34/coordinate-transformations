@@ -1,30 +1,27 @@
 #include "transform.h"
 #include <immintrin.h>
-#include <iostream>
 #include <cmath>
 
-// Shift segment with immintrin
-// void shift_segment(__m256d* segment1, __m256d* segment2, double dx, double dy) {
-//     __m256d delta = _mm256_set_pd(dx, dx, dx, dx);
-//     __m256d shifted_segment1 = _mm256_add_pd(*segment1, delta);
-//     delta = _mm256_set_pd(dy, dy, dy, dy);
-//     __m256d shifted_segment2 = _mm256_add_pd(*segment2, delta);
-//     *segment1 = shifted_segment1;
-//     *segment2 = shifted_segment2;
-//     return;
-// }
+// p_*** = packed
+void RotateI64_intrin(double* x, double* y, double angle) {
+    double sin = std::sin(angle);
+    double cos = std::cos(angle);
+    __m256d pcos = _mm256_set1_pd(cos);
+    __m256d psin = _mm256_set1_pd(sin);
 
-void RotateI64_avx2(double *x_values, double *y_values, double theta, int num_points) {
-    double cos_theta = std::cos(theta);
-    double sin_theta = std::sin(theta);
-    __m256d cos_vals = _mm256_set1_pd(cos_theta);
-    __m256d sin_vals = _mm256_set1_pd(sin_theta);
-    for (int i = 0; i < num_points; i += 4) {
-        __m256d x = _mm256_load_pd(&x_values[i]);
-        __m256d y = _mm256_load_pd(&y_values[i]);
-        __m256d x_prime = _mm256_fmsub_pd(x, cos_vals, _mm256_mul_pd(y, sin_vals));
-        __m256d y_prime = _mm256_fmadd_pd(x, sin_vals, _mm256_mul_pd(y, cos_vals));
-        _mm256_store_pd(&x_values[i], x_prime);
-        _mm256_store_pd(&y_values[i], y_prime);
+    __m256d px = _mm256_load_pd(x);
+    __m256d py = _mm256_load_pd(y);
+    __m256d x_new = _mm256_fmsub_pd(px, pcos, _mm256_mul_pd(py, psin)); // xcos - ysin
+    __m256d y_new = _mm256_fmadd_pd(px, psin, _mm256_mul_pd(py, pcos)); // xsin + ycos
+    _mm256_store_pd(x, x_new);
+    _mm256_store_pd(y, y_new);
+}
+
+void RotateI64(double* x, double* y, double angle) {
+    double sin = std::sin(angle);
+    double cos = std::cos(angle);
+    for (int i = 0; i < 4; i++) {
+        x[i] = x[i] * cos - y[i] * sin;
+        y[i] = x[i] * sin + y[i] * cos;
     }
 }
