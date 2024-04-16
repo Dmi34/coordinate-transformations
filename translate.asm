@@ -1,5 +1,5 @@
 ;------------------------------------------------------------------------------
-; void TranslateI64_avx2(__m256d* x, __m256d* y, double dx, double dy);
+; void TranslateI64_avx2(double* x, double* y, double dx, double dy);
 ;------------------------------------------------------------------------------
         section .text
 
