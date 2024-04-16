@@ -1,5 +1,5 @@
 #include "transform.h"
-
+#include <cmath>
 #include <iostream>
 
 void TestTranslate() {
@@ -19,7 +19,23 @@ void TestTranslate() {
     }
 }
 
+void TestRotate() {
+    double x_points[4] = {1.0, 2.0, 3.0, 4.0};
+    double y_points[4] = {1.0, 2.0, 3.0, 4.0};
+    double angle = M_PI / 2;
+    RotateI64_avx2(x_points, y_points, angle, 4);
+    for (int i = 0; i < 4; i++) {
+        std::cout << x_points[i] << " ";
+    }
+    std::cout << '\n';
+    for (int i = 0; i < 4; i++) {
+        std::cout << y_points[i] << " ";
+    }
+}
+
 int main() {
     TestTranslate();
+    std::cout << "________" << '\n';
+    TestRotate();
     return 0;
 }
