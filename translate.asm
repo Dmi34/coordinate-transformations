@@ -4,6 +4,7 @@
         section .text
 
         global TranslateI64_avx2
+
 TranslateI64_avx2:
         vmovapd ymm0, [rcx]
         vmovapd ymm1, [rdx]

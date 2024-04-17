@@ -1,17 +1,16 @@
 #include "transform.h"
 #include <immintrin.h>
 
-// p_*** = packed
-void TranslateI64_intrin(double* x, double* y, double dx, double dy) {
-    auto px = _mm256_add_pd(_mm256_load_pd(x), _mm256_set1_pd(dx));
-    auto py = _mm256_add_pd(_mm256_load_pd(y), _mm256_set1_pd(dy));
-    _mm256_store_pd(x, px);
-    _mm256_store_pd(y, py);
+inline void TranslateI64_intrin(PackedPoint* p, Point delta) {
+    auto x_new = _mm256_add_pd(_mm256_load_pd(p->x), _mm256_set1_pd(delta.x));
+    auto y_new = _mm256_add_pd(_mm256_load_pd(p->y), _mm256_set1_pd(delta.y));
+    _mm256_store_pd(p->x, x_new);
+    _mm256_store_pd(p->y, y_new);
 }
 
-void TranslateI64(double* x, double* y, double dx, double dy) {
+inline void TranslateI64(PackedPoint* p, Point delta) {
     for (int i = 0; i < 4; i++) {
-        x[i] += dx;
-        y[i] += dy;
+        p->x[i] += delta.x;
+        p->y[i] += delta.y;
     }
 }

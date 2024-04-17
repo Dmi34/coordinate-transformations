@@ -1,13 +1,37 @@
 #pragma once
 
 #include "immintrin.h"
+#include <cmath>
 
-extern "C" void TranslateI64_avx2(double* x, double* y, double dx, double dy);
-extern "C" void RotateI64_avx2(double* x, double* y, double sin, double cos);
-inline void RotateI64_avx2(double* x, double* y, double angle);
+struct alignas(16) Point {
+    double x;
+    double y;
+};
 
-void TranslateI64_intrin(double *x, double *y, double dx, double dy);
-void RotateI64_intrin(double *x_values, double *y_values, double theta);
+struct alignas(16) PackedPoint {
+    double* x;
+    double* y;
+};
 
-void TranslateI64(double *x, double *y, double dx, double dy);
-void RotateI64(double *x_values, double *y_values, double theta);
+struct alignas(16) Segment {
+    Point start;
+    Point end;
+};
+
+struct alignas(16) PackedSegment {
+    PackedPoint start;
+    PackedPoint end;
+};
+
+extern "C" void TranslateI64_avx2(PackedPoint* p, Point delta);
+extern "C" void RotateI64_avx2(PackedPoint* p, double sin, double cos);
+inline void RotateI64_avx2(PackedPoint* p, double angle) {
+    RotateI64_avx2(p, std::sin(angle), std::cos(angle));
+}
+
+void TranslateI64_intrin(PackedPoint* p, Point delta);
+void RotateI64_intrin(PackedPoint* p, double angle);
+
+void TranslateI64(PackedPoint* p, Point delta);
+void RotateI64(PackedPoint* p, double angle);
+
