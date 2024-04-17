@@ -8,8 +8,8 @@
 TranslateI64_avx2:
         vmovapd ymm0, [rcx]
         vmovapd ymm1, [rdx]
-        vbroadcastsd ymm2, r8
-        vbroadcastsd ymm3, r9
+        vbroadcastsd ymm2, [r8] ; same problem as in rotate broadcastsd
+        vbroadcastsd ymm3, [r9] ; same. Zaglushka
         vaddpd ymm0, ymm2
         vaddpd ymm1, ymm3
         vmovapd [rcx], ymm0

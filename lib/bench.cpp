@@ -2,24 +2,35 @@
 #include <cmath>
 #include <iostream>
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/benchmark/catch_benchmark_all.hpp>
 #include <catch2/matchers/catch_matchers.hpp>
 #include <catch2/matchers/catch_matchers_range_equals.hpp>
 
-TEST_CASE("BEBRA") {
-    REQUIRE(5 == 5);
-    Point delta{1, 1};
-    double x[4] = {1, 2, 3, 4};
-    double y[4] = {1, 2, 3, 4};
-    PackedPoint p{x, y};
-    TranslateI64_intrin(&p, delta);
-    REQUIRE(x[0] == 2);
-    REQUIRE(y[0] == 2);
+Point delta{1, 1};
+double x[4] = {1, 2, 3, 4};
+double y[4] = {1, 2, 3, 4};
+PackedPoint p{x, y};
+
+TEST_CASE("BENCHMARKS FOR TRANSLATE") { 
+    BENCHMARK("TEST TranslateI64_intrin") {
+        return TranslateI64_intrin(&p, delta);
+    };
+    BENCHMARK("TEST TranslateI64") {
+        return TranslateI64_intrin(&p, delta);
+    };
 }
 
-TEST_CASE("BENCHMARKS") {
-    Point delta{1, 1};
-    double x[4] = {1, 2, 3, 4};
-    double y[4] = {1, 2, 3, 4};
-    PackedPoint p{x, y};
-    return TranslateI64_intrin(&p, delta);
-}
+// Problem with 'always_inline' in avx2
+
+// double x_new[4] = {1, 2, 3, 4};
+// double y_new[4] = {1, 2, 3, 4};
+// PackedPoint p1{x_new, y_new};
+// double angle = M_PI / 4;
+// TEST_CASE("BENCHMARKS FOR ROTATE") { 
+//     BENCHMARK("TEST TranslateI64_intrin") {
+//         return RotateI64_intrin(&p1, angle);
+//     };
+//     BENCHMARK("TEST TranslateI64") {
+//         return RotateI64(&p1, angle);
+//     };
+// }

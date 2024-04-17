@@ -15,14 +15,29 @@ load("@rules_cc//cc:defs.bzl", "cc_library", "cc_test")
 #     ]
 # )
 
+genrule(
+    name = "assemble_translate",
+    srcs = ["translate.asm"],
+    outs = ["assemble_translate.o"],
+    cmd = "nasm -f elf64 -g -F dwarf -o $@ $(location translate.asm)",
+)
+
+genrule(
+    name = "assemble_rotate",
+    srcs = ["rotate.asm"],
+    outs = ["assemble_rotate.o"],
+    cmd = "nasm -f elf64 -g -F dwarf -o $@ $(location rotate.asm)",
+)
+
 cc_library(
     name = "main",
-    srcs = ["translate.cpp", "rotate.cpp"],
+    srcs = ["translate.cpp", "rotate.cpp", ":assemble_translate", ":assemble_rotate"],
     hdrs = ["transform.h"],
     copts = [
         "-m64",
-        "-mavx512f",
-        "-mavx512er",
+        "-mavx2",
+        # "-mavx512f",
+        # "-mavx512er",
         "-O3"
     ]
 )
