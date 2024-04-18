@@ -5,7 +5,8 @@
 void TestTranslate() {
     double x[4] = {1.0, 2.0, 3.0, 4.0};
     double y[4] = {5.0, 6.0, 7.0, 8.0};
-    TranslateI64_intrin(x, y, -2, 8);
+//    TranslateI64_intrin(x, y, -2, 8);
+    TranslateI64_avx2(x, y, -2, 8);
     for (int i = 0; i < 4; i++) {
         std::cout << x[i] << " ";
     }
@@ -33,6 +34,6 @@ void TestRotate() {
 int main() {
     TestTranslate();
     std::cout << "-----------------" << '\n';
-//    TestRotate();
+    TestRotate();
     return 0;
 }

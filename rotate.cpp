@@ -2,7 +2,7 @@
 #include <immintrin.h>
 #include <cmath>
 
-inline void RotateI64_intrin(PackedPoint* p, double angle) {
+void RotateF64_imm(PackedPoint* p, double angle) {
     double sin = std::sin(angle);
     double cos = std::cos(angle);
     __m256d pcos = _mm256_set1_pd(cos);
@@ -16,7 +16,7 @@ inline void RotateI64_intrin(PackedPoint* p, double angle) {
     _mm256_store_pd(p->y, y_new);
 }
 
-inline void RotateI64(PackedPoint* p, double angle) {
+void RotateF64_cpp(PackedPoint* p, double angle) {
     double sin = std::sin(angle);
     double cos = std::cos(angle);
     for (int i = 0; i < 4; i++) {
