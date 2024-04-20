@@ -17,4 +17,3 @@ RotateF64_asm:
 
         vmovapd [rcx], ymm2
         vmovapd [rcx + 8], ymm3
-        ret
