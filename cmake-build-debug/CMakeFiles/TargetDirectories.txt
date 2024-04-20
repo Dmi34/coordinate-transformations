@@ -1,0 +1,3 @@
+/home/dmi34/CLionProjects/coordinate-transformations/cmake-build-debug/CMakeFiles/test.dir
+/home/dmi34/CLionProjects/coordinate-transformations/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/dmi34/CLionProjects/coordinate-transformations/cmake-build-debug/CMakeFiles/rebuild_cache.dir
