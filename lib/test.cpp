@@ -9,7 +9,8 @@ Point delta{1, 1};
 double x[4] = {1, 2, 3, 4};
 double y[4] = {1, 2, 3, 4};
 PackedPoint p{x, y};
+
 TEST_CASE("TEST") {
-    TranslateI64_avx2(&p, delta);
+    TranslateF64_imm(&p, delta);
     REQUIRE("5 == 5");
 }

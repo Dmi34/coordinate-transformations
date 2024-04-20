@@ -12,11 +12,11 @@ double y[4] = {1, 2, 3, 4};
 PackedPoint p{x, y};
 
 TEST_CASE("BENCHMARKS FOR TRANSLATE") { 
-    BENCHMARK("TEST TranslateI64_intrin") {
-        return TranslateI64_intrin(&p, delta);
+    BENCHMARK("TEST TranslateF64_imm") {
+        return TranslateF64_imm(&p, delta);
     };
-    BENCHMARK("TEST TranslateI64") {
-        return TranslateI64_intrin(&p, delta);
+    BENCHMARK("TEST TranslateF64_cpp") {
+        return TranslateF64_cpp(&p, delta);
     };
 }
 
