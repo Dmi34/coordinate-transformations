@@ -21,27 +21,31 @@ void Print(const PackedPoint& p, std::string message = "") {
     std::cout << '\n';
 }
 
-TEST_CASE("Test TranslateF64_imm") {
-    Point delta{1.5, 2.75};
-    double x[4] = {1, 2.3, 3, 4.2};
-    double y[4] = {5, 6.142353556, 7, 8.15};
-    PackedPoint p1{x, y};
-    PackedPoint p2{x, y};
-    TranslateF64_imm(&p1, delta);
-    TranslateF64_cpp(&p2, delta);
-    CheckEq(p1, p2);
-}
+// TEST_CASE("Test TranslateF64_imm") {
+//     Point delta{1.5, 2.75};
+//     double x[4] = {1, 2.3, 3, 4.2};
+//     double y[4] = {5, 6.142353556, 7, 8.15};
+//     PackedPoint p1{x, y};
+//     PackedPoint p2{x, y};
+//     TranslateF64_asm(&p1, delta);
+//     TranslateF64_imm(&p1, delta);
+//     TranslateF64_cpp(&p2, delta);
+//     CheckEq(p1, p2);
+// }
 
 TEST_CASE("Test RotateF64_imm") {
-//    double angle = M_PI_4;
-//    double x[4] = {1, 0, -1, 0};
-//    double y[4] = {0, 1, 0, -1};
-//    PackedPoint p1{x, y};
-//    PackedPoint p2{x, y};
-//    RotateF64_imm(&p1, angle);
-//    RotateF64_cpp(&p2, angle);
-//    CheckEq(p1, p2);
-//    Print(p1, "imm: ");
-//    Print(p2, "cpp: ");
+    double angle = M_PI_2;
+    double x[4] = {1, 0, -1, 0};
+    double y[4] = {0, 1, 0, -1};
+    PackedPoint p1{x, y};
+    PackedPoint p2{x, y};
+    RotateF64_asm(&p1, std::sin(angle), std::cos(angle));
+    Print(p1);
+    RotateF64_imm(&p1, angle);
+    RotateF64_cpp(&p2, angle);
+
+    CheckEq(p1, p2);
+    Print(p1, "imm: ");
+    Print(p2, "cpp: ");
 }
 

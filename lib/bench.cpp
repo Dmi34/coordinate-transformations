@@ -12,6 +12,9 @@ double y[4] = {1, 2, 3, 4};
 PackedPoint p{x, y};
 
 TEST_CASE("BENCHMARKS FOR TRANSLATE") { 
+    BENCHMARK("TEST TranslateF64_asm") {
+        return TranslateF64_asm(&p, delta);
+    };
     BENCHMARK("TEST TranslateF64_imm") {
         return TranslateF64_imm(&p, delta);
     };
@@ -20,17 +23,18 @@ TEST_CASE("BENCHMARKS FOR TRANSLATE") {
     };
 }
 
-// Problem with 'always_inline' in avx2
-
-// double x_new[4] = {1, 2, 3, 4};
-// double y_new[4] = {1, 2, 3, 4};
-// PackedPoint p1{x_new, y_new};
-// double angle = M_PI / 4;
-// TEST_CASE("BENCHMARKS FOR ROTATE") { 
-//     BENCHMARK("TEST TranslateI64_intrin") {
-//         return RotateI64_intrin(&p1, angle);
-//     };
-//     BENCHMARK("TEST TranslateI64") {
-//         return RotateI64(&p1, angle);
-//     };
-// }
+double x_new[4] = {1, 2, 3, 4};
+double y_new[4] = {1, 2, 3, 4};
+PackedPoint p1{x_new, y_new};
+double angle = M_PI / 4;
+TEST_CASE("BENCHMARKS FOR ROTATE") {
+    BENCHMARK("TEST RotateF64_asm") {
+        return RotateF64_imm(&p1, angle);
+    };
+    BENCHMARK("TEST RotateF64_imm") {
+        return RotateF64_imm(&p1, angle);
+    };
+    BENCHMARK("TEST RotateF64_cpp") {
+        return RotateF64_cpp(&p1, angle);
+    };
+}

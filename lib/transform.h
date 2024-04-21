@@ -10,15 +10,15 @@ struct Point {
 };
 
 struct PackedPoint {
-//    alignas(32)
+    //    alignas(32)
     double* x;
-//    alignas(32)
+    //    alignas(32)
     double* y;
 
-    PackedPoint(double* _x, double* _y) : x(new alignas(32) double[4]), y(new alignas(32) double[4]) {
-        std::copy(_x, _x + 4, x);
-        std::copy(_y, _y + 4, y);
-    }
+    // PackedPoint(double* _x, double* _y) : x(new alignas(32) double[4]), y(new alignas(32) double[4]) {
+    //     std::copy(_x, _x + 4, x);
+    //     std::copy(_y, _y + 4, y);
+    // }
 };
 
 struct Segment {
