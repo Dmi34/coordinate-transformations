@@ -1,9 +1,0 @@
-# ninja log v5
-1	2	0	CMakeFiles/test.dir/rotate.asm.o	329be438ca4794ff
-1	303	1713293252386626183	CMakeFiles/test.dir/translate.cpp.o	a46b506e4ecbb25b
-0	10	1713348869843981114	build.ninja	6bf44b04d194b053
-1	3	0	CMakeFiles/test.dir/translate.asm.o	ee99a2a2a4352644
-0	569	1713293252654630092	CMakeFiles/test.dir/test.cpp.o	2e67f8fd205b89e1
-1	397	1713293252482627583	CMakeFiles/test.dir/transform.cpp.o	1d4302a33d51b373
-283	321	1713291156665593333	test	4d7c1e276ac31a66
-0	420	1713293252502627875	CMakeFiles/test.dir/rotate.cpp.o	26918031821f3dcc

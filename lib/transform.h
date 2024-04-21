@@ -1,24 +1,32 @@
 #pragma once
 
-#include <cmath>
 #include <immintrin.h>
+#include <cmath>
+#include <algorithm>
 
-struct alignas(16) Point {
+struct Point {
     double x;
     double y;
 };
 
-struct alignas(16) PackedPoint {
+struct PackedPoint {
+//    alignas(32)
     double* x;
+//    alignas(32)
     double* y;
+
+    PackedPoint(double* _x, double* _y) : x(new alignas(32) double[4]), y(new alignas(32) double[4]) {
+        std::copy(_x, _x + 4, x);
+        std::copy(_y, _y + 4, y);
+    }
 };
 
-struct alignas(16) Segment {
+struct Segment {
     Point start;
     Point end;
 };
 
-struct alignas(16) PackedSegment {
+struct PackedSegment {
     PackedPoint start;
     PackedPoint end;
 };
@@ -26,7 +34,7 @@ struct alignas(16) PackedSegment {
 extern "C" void TranslateF64_asm(PackedPoint* p, Point delta);
 extern "C" void RotateF64_asm(PackedPoint* p, double sin, double cos);
 
-inline void RotateI64_avx2(PackedPoint* p, double angle) {
+inline void RotateF64_asm(PackedPoint* p, double angle) {
     RotateF64_asm(p, std::sin(angle), std::cos(angle));
 }
 
@@ -37,7 +45,7 @@ inline void TranslateF64_imm(PackedPoint* p, Point delta) {
     _mm256_store_pd(p->y, y_new);
 }
 
-inline void imm(PackedPoint* p, double angle) {
+inline void RotateF64_imm(PackedPoint* p, double angle) {
     double sin = std::sin(angle);
     double cos = std::cos(angle);
     __m256d pcos = _mm256_set1_pd(cos);
@@ -51,19 +59,21 @@ inline void imm(PackedPoint* p, double angle) {
     _mm256_store_pd(p->y, y_new);
 }
 
-inline void TranslateI64(PackedPoint* p, Point delta) {
+inline void TranslateF64_cpp(PackedPoint* p, Point delta) {
     for (int i = 0; i < 4; i++) {
         p->x[i] += delta.x;
         p->y[i] += delta.y;
     }
 }
 
-inline void RotateI64(PackedPoint* p, double angle) {
+inline void RotateF64_cpp(PackedPoint* p, double angle) {
     double sin = std::sin(angle);
     double cos = std::cos(angle);
     for (int i = 0; i < 4; i++) {
-        p->x[i] = p->x[i] * cos - p->y[i] * sin;
-        p->y[i] = p->x[i] * sin + p->y[i] * cos;
+        auto x = p->x[i];
+        auto y = p->y[i];
+        p->x[i] = x * cos - y * sin;
+        p->y[i] = x * sin + y * cos;
     }
 }
 
