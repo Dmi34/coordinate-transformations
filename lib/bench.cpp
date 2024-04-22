@@ -7,19 +7,24 @@
 #include <catch2/matchers/catch_matchers_range_equals.hpp>
 
 Point delta{1, 1};
-double x[4] = {1, 2, 3, 4};
-double y[4] = {1, 2, 3, 4};
-PackedPoint p{x, y};
-
 TEST_CASE("BENCHMARKS FOR TRANSLATE") { 
+    double x[4] = {1, 2, 3, 4};
+    double y[4] = {1, 2, 3, 4};
+    PackedPoint p{x, y};
     BENCHMARK("TEST TranslateF64_asm") {
         return TranslateF64_asm(&p, delta);
     };
+    double x1[4] = {1, 2, 3, 4};
+    double y1[4] = {1, 2, 3, 4};
+    PackedPoint p1{x1, y1};
     BENCHMARK("TEST TranslateF64_imm") {
-        return TranslateF64_imm(&p, delta);
+        return TranslateF64_imm(&p1, delta);
     };
+    double x2[4] = {1, 2, 3, 4};
+    double y2[4] = {1, 2, 3, 4};
+    PackedPoint p2{x2, y2};
     BENCHMARK("TEST TranslateF64_cpp") {
-        return TranslateF64_cpp(&p, delta);
+        return TranslateF64_cpp(&p2, delta);
     };
 }
 
