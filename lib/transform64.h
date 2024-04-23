@@ -50,9 +50,9 @@ using RadianAngle = double;
 extern "C" PackedPoint Translate_asm(const PackedPoint& p, Point delta);
 
 inline PackekdPoint Translate_imm(const PackedPoint& p, Point delta) {
-    PackedPoint res;
     const auto x_new = _mm256_add_pd(_mm256_load_pd(p.x), _mm256_set1_pd(delta.x));
     const auto y_new = _mm256_add_pd(_mm256_load_pd(p.y), _mm256_set1_pd(delta.y));
+    PackedPoint res;
     _mm256_store_pd(res.x, x_new);
     _mm256_store_pd(res.y, y_new);
     return res;
@@ -80,8 +80,8 @@ inline PackedPoint Rotate_imm(const PackedPoint& p, RadianAngle angle) {
 
     const auto x = _mm256_load_pd(p.x);
     const auto y = _mm256_load_pd(p.y);
-    const auto x_new = _mm256_fmsub_pd(x, packed_cos, _mm256_mul_pd(y, packed_sin)); // xcos - ysin
-    const auto y_new = _mm256_fmadd_pd(x, packed_sin, _mm256_mul_pd(y, packed_cos)); // xsin + ycos
+    const auto x_new = _mm256_fmsub_pd(x, packed_cos, _mm256_mul_pd(y, packed_sin)); // x = x*cos - y*sin
+    const auto y_new = _mm256_fmadd_pd(x, packed_sin, _mm256_mul_pd(y, packed_cos)); // y = x*sin + y*cos
     PackedPoint result;
     _mm256_store_pd(result.x, x_new);
     _mm256_store_pd(result.y, y_new);
@@ -100,54 +100,40 @@ inline PackedPoint Rotate_cpp(const PackedPoint& p, RadianAngle angle) {
 }
 
 // Segment
-/*
-inline void TranslateS64_imm(PackedSegment* s, Point delta) {
-    auto packed_dx = _mm256_set1_pd(delta.x);
-    auto packed_dy = _mm256_set1_pd(delta.y);
-    _mm256_store_pd(s->start.x, _mm256_add_pd(_mm256_load_pd(s->start.x), packed_dx));
-    _mm256_store_pd(s->start.y, _mm256_add_pd(_mm256_load_pd(s->start.y), packed_dy));
-    _mm256_store_pd(s->end.x, _mm256_add_pd(_mm256_load_pd(s->end.x), packed_dx));
-    _mm256_store_pd(s->end.y, _mm256_add_pd(_mm256_load_pd(s->end.y), packed_dy));
+inline PackedSegment Translate_imm(const PackedSegment& s, Point delta) {
+    const auto packed_dx = _mm256_set1_pd(delta.x);
+    const auto packed_dy = _mm256_set1_pd(delta.y);
+    PackedSegment res;
+    _mm256_store_pd(res.start.x, _mm256_add_pd(_mm256_load_pd(s.start.x), packed_dx));
+    _mm256_store_pd(res.start.y, _mm256_add_pd(_mm256_load_pd(s.start.y), packed_dy));
+    _mm256_store_pd(res.finish.x, _mm256_add_pd(_mm256_load_pd(s.finish.x), packed_dx));
+    _mm256_store_pd(res.finish.y, _mm256_add_pd(_mm256_load_pd(s.finish.y), packed_dy));
+    return res;
 }
 
-inline void RotateS64_imm(PackedSegment* s, double angle) {
-    double sin = std::sin(angle);
-    double cos = std::cos(angle);
-    auto pcos = _mm256_set1_pd(cos);
-    auto psin = _mm256_set1_pd(sin);
-
-    auto x1 = _mm256_load_pd(s->start.x);
-    auto y1 = _mm256_load_pd(s->start.y);
-    auto x2 = _mm256_load_pd(s->end.x);
-    auto y2 = _mm256_load_pd(s->end.y);
-    _mm256_store_pd(s->start.x, _mm256_fmsub_pd(x1, pcos, _mm256_mul_pd(y1, psin))); // xcos - ysin
-    _mm256_store_pd(s->start.y, _mm256_fmadd_pd(x1, psin, _mm256_mul_pd(y1, pcos))); // xsin + ycos
-    _mm256_store_pd(s->end.x, _mm256_fmsub_pd(x2, pcos, _mm256_mul_pd(y2, psin))); // xcos - ysin
-    _mm256_store_pd(s->end.y, _mm256_fmadd_pd(x2, psin, _mm256_mul_pd(y2, pcos))); // xsin + ycos
+inline PackedSegment Translate_cpp(const PackedSegment& s, Point delta) {
+    return PackedSegment(Translate_cpp(s.start, delta), Translate_cpp(s.finish, delta));
 }
 
-inline void TranslateS64_cpp(PackedSegment* s, Point delta) {
-    for (int i = 0; i < 4; i++) {
-        s->start.x[i] += delta.x;
-        s->start.y[i] += delta.y;
-        s->end.x[i] += delta.x;
-        s->end.y[i] += delta.y;
-    }
+inline PackedSegment Rotate_imm(const PackedSegment& s, RadianAngle angle) {
+    const DoubleDirection dir(angle);
+    const auto packed_cos = _mm256_set1_pd(dir.cos);
+    const auto packed_sin = _mm256_set1_pd(dir.sin);
+
+    const auto x1 = _mm256_load_pd(s.start.x);
+    const auto y1 = _mm256_load_pd(s.start.y);
+    const auto x2 = _mm256_load_pd(s.finish.x);
+    const auto y2 = _mm256_load_pd(s.finish.y);
+    PackedSegment result;
+    _mm256_store_pd(res.start.x, _mm256_fmsub_pd(x1, packed_cos, _mm256_mul_pd(y1, packed_sin))); // x1 = x1*cos - y1*sin
+    _mm256_store_pd(res.start.y, _mm256_fmadd_pd(x1, packed_sin, _mm256_mul_pd(y1, packed_cos))); // y1 = x1*sin + y1*cos
+    _mm256_store_pd(res.finish.x, _mm256_fmsub_pd(x2, packed_cos, _mm256_mul_pd(y2, packed_sin))); // x2 = x2*cos - y2*sin
+    _mm256_store_pd(res.finish.y, _mm256_fmadd_pd(x2, packed_sin, _mm256_mul_pd(y2, packed_cos))); // y2 = x2*sin + y2*cos
+    return result;
 }
 
-inline void RotateS64_cpp(PackedSegment* s, double angle) {
-    double sin = std::sin(angle);
-    double cos = std::cos(angle);
-    for (int i = 0; i < 4; i++) {
-        auto x1 = s->start.x[i];
-        auto y1 = s->start.y[i];
-        auto x2 = s->end.x[i];
-        auto y2 = s->end.y[i];
-        s->start.x[i] = x1 * cos - y1 * sin;
-        s->start.y[i] = x1 * sin + y1 * cos;
-        s->end.x[i] = x2 * cos - y2 * sin;
-        s->end.y[i] = x2 * sin + y2 * cos;
-    }
+inline PackedSegment Rotate_cpp(const PackedSegment& s, RadianAngle angle) {
+    return PackedSegment(Rotate_cpp(s.start, angle), Rotate_cpp(s.finish, angle));
 }
-*/
+
 }
