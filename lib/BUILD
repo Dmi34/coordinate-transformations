@@ -18,7 +18,7 @@ genrule(
 cc_library(
     name = "main",
     srcs = [":assemble_translate", ":assemble_rotate"],
-    hdrs = ["transform.h"],
+    hdrs = ["transform64.h"],
     copts = [
         "-m64",
         "-mavx2",
@@ -28,9 +28,9 @@ cc_library(
 )
 
 cc_test(
-    name = "benchmark_main",
+    name = "benchmark64",
     # size = "small",
-    srcs = ["bench.cpp"],
+    srcs = ["bench64.cpp"],
     deps = [
         ":main",
         "@catch2//:catch2_main",
@@ -44,9 +44,9 @@ cc_test(
 )
 
 cc_test(
-    name = "test_main",
+    name = "test64",
     # size = "small",
-    srcs = ["test.cpp"],
+    srcs = ["test64.cpp"],
     deps = [
         ":main",
         "@catch2//:catch2_main",

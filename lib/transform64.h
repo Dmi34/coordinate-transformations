@@ -3,38 +3,37 @@
 #include <immintrin.h>
 #include <cmath>
 #include <algorithm>
-#include <iostream>
 
-struct Point {
+struct Point64 {
     double x;
     double y;
 };
 
-struct PackedPoint {
+struct PackedPoint64 {
     double* x;
     double* y;
 };
 
-struct PackedSegment {
-    PackedPoint start;
-    PackedPoint end;
+struct PackedSegment64 {
+    PackedPoint64 start;
+    PackedPoint64 end;
 };
 
-extern "C" void TranslateP64_asm(PackedPoint* p, Point delta);
-extern "C" void RotateP64_asm(PackedPoint* p, double sin, double cos);
+extern "C" void TranslateP64_asm(PackedPoint64* p, Point64 delta);
+extern "C" void RotateP64_asm(PackedPoint64* p, double sin, double cos);
 
-inline void RotateP64_asm(PackedPoint* p, double angle) {
+inline void RotateP64_asm(PackedPoint64* p, double angle) {
     RotateP64_asm(p, std::sin(angle), std::cos(angle));
 }
 
-inline void TranslateP64_imm(PackedPoint* p, Point delta) {
+inline void TranslateP64_imm(PackedPoint64* p, Point64 delta) {
     auto x_new = _mm256_add_pd(_mm256_load_pd(p->x), _mm256_set1_pd(delta.x));
     auto y_new = _mm256_add_pd(_mm256_load_pd(p->y), _mm256_set1_pd(delta.y));
     _mm256_store_pd(p->x, x_new);
     _mm256_store_pd(p->y, y_new);
 }
 
-inline void RotateP64_imm(PackedPoint* p, double angle) {
+inline void RotateP64_imm(PackedPoint64* p, double angle) {
     double sin = std::sin(angle);
     double cos = std::cos(angle);
     auto pcos = _mm256_set1_pd(cos);
@@ -48,14 +47,14 @@ inline void RotateP64_imm(PackedPoint* p, double angle) {
     _mm256_store_pd(p->y, y_new);
 }
 
-inline void TranslateP64_cpp(PackedPoint* p, Point delta) {
+inline void TranslateP64_cpp(PackedPoint64* p, Point64 delta) {
     for (int i = 0; i < 4; i++) {
         p->x[i] += delta.x;
         p->y[i] += delta.y;
     }
 }
 
-inline void RotateP64_cpp(PackedPoint* p, double angle) {
+inline void RotateP64_cpp(PackedPoint64* p, double angle) {
     double sin = std::sin(angle);
     double cos = std::cos(angle);
     for (int i = 0; i < 4; i++) {
@@ -66,7 +65,7 @@ inline void RotateP64_cpp(PackedPoint* p, double angle) {
     }
 }
 
-inline void TranslateS64_imm(PackedSegment* s, Point delta) {
+inline void TranslateS64_imm(PackedSegment64* s, Point64 delta) {
     auto packed_dx = _mm256_set1_pd(delta.x);
     auto packed_dy = _mm256_set1_pd(delta.y);
     _mm256_store_pd(s->start.x, _mm256_add_pd(_mm256_load_pd(s->start.x), packed_dx));
@@ -75,7 +74,7 @@ inline void TranslateS64_imm(PackedSegment* s, Point delta) {
     _mm256_store_pd(s->end.y, _mm256_add_pd(_mm256_load_pd(s->end.y), packed_dy));
 }
 
-inline void RotateS64_imm(PackedSegment* s, double angle) {
+inline void RotateS64_imm(PackedSegment64* s, double angle) {
     double sin = std::sin(angle);
     double cos = std::cos(angle);
     auto pcos = _mm256_set1_pd(cos);
@@ -91,7 +90,7 @@ inline void RotateS64_imm(PackedSegment* s, double angle) {
     _mm256_store_pd(s->end.y, _mm256_fmadd_pd(x2, psin, _mm256_mul_pd(y2, pcos))); // xsin + ycos
 }
 
-inline void TranslateS64_cpp(PackedSegment* s, Point delta) {
+inline void TranslateS64_cpp(PackedSegment64* s, Point64 delta) {
     for (int i = 0; i < 4; i++) {
         s->start.x[i] += delta.x;
         s->start.y[i] += delta.y;
@@ -100,7 +99,7 @@ inline void TranslateS64_cpp(PackedSegment* s, Point delta) {
     }
 }
 
-inline void RotateS64_cpp(PackedSegment* s, double angle) {
+inline void RotateS64_cpp(PackedSegment64* s, double angle) {
     double sin = std::sin(angle);
     double cos = std::cos(angle);
     for (int i = 0; i < 4; i++) {
