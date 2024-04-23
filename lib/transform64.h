@@ -49,7 +49,7 @@ using RadianAngle = double;
 // Points
 extern "C" PackedPoint Translate_asm(const PackedPoint& p, Point delta);
 
-inline PackekdPoint Translate_imm(const PackedPoint& p, Point delta) {
+inline PackedPoint Translate_imm(const PackedPoint& p, Point delta) {
     PackedPoint res;
     const auto x_new = _mm256_add_pd(_mm256_load_pd(p.x), _mm256_set1_pd(delta.x));
     const auto y_new = _mm256_add_pd(_mm256_load_pd(p.y), _mm256_set1_pd(delta.y));
