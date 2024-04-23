@@ -1,10 +1,10 @@
 ;------------------------------------------------------------------------------
-; void RotateF64_asm(PackedPont* p, double sin, double cos);
+; void RotateP64_asm(PackedPont* p, double sin, double cos);
 ;------------------------------------------------------------------------------
         section .text
 
-        global RotateF64_asm
-RotateF64_asm:
+        global RotateP64_asm
+RotateP64_asm:
         vbroadcastsd ymm0, xmm0
         vbroadcastsd ymm1, xmm1
         mov rax, [rdi]

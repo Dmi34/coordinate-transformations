@@ -1,11 +1,11 @@
 ;------------------------------------------------------------------------------
-; void TranslateF64_asm(PackedPoint* p, Point delta);
+; void TranslateP64_asm(PackedPoint* p, Point delta);
 ;------------------------------------------------------------------------------
         section .text
 
-        global TranslateF64_asm
+        global TranslateP64_asm
 
-TranslateF64_asm:
+TranslateP64_asm:
         mov rax, [rdi]
         vmovapd ymm2, [rax]
         mov rax, [rdi + 8]
