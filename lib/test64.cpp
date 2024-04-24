@@ -31,10 +31,12 @@ void Print(const PackedPoint& p, std::string message = "") {
     std::cout << '\n';
 }
 
+// Works slow under ASAN, UBSAN and other sanitizers, for sanitizing reduce the scale of randoms
+// and number of iterations
 TEST_CASE("Test Translate Point") {
     std::default_random_engine gen;
     std::uniform_real_distribution<double> distr(-100000.0, 100000.0);
-    for(size_t k = 0; k < 100000; ++k) {
+    for(size_t k = 0; k < 10000; ++k) {
         Point delta{distr(gen), distr(gen)};
         double points[4][4];
         for(size_t i = 0; i < 2; ++i) {
@@ -52,7 +54,7 @@ TEST_CASE("Test Translate Point") {
 TEST_CASE("Test Rotate Point") {
     std::default_random_engine gen;
     std::uniform_real_distribution<double> distr(-100000.0, 100000.0);
-    for(size_t k = 0; k < 100000; ++k) {
+    for(size_t k = 0; k < 10000; ++k) {
         double angle = distr(gen);
         double points[4][4];
         for(size_t i = 0; i < 2; ++i) {
@@ -70,7 +72,7 @@ TEST_CASE("Test Rotate Point") {
 TEST_CASE("Test Translate Segment") {
     std::default_random_engine gen;
     std::uniform_real_distribution<double> distr(-100000.0, 100000.0);
-    for(size_t k = 0; k < 100000; ++k) {
+    for(size_t k = 0; k < 10000; ++k) {
         Point delta{distr(gen), distr(gen)};
         double points1[4][4];
         double points2[4][4];
@@ -95,7 +97,7 @@ TEST_CASE("Test Translate Segment") {
 TEST_CASE("Test Rotate Segmanet") {
     std::default_random_engine gen;
     std::uniform_real_distribution<double> distr(-100000.0, 100000.0);
-    for(size_t k = 0; k < 100000; ++k) {
+    for(size_t k = 0; k < 10000; ++k) {
         double angle = distr(gen);
         double points1[4][4];
         double points2[4][4];
