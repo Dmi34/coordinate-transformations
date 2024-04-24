@@ -4,6 +4,7 @@
 #include <cmath>
 #include <algorithm>
 
+/// Double precision points and segments transformations
 namespace DoubleGeometry {
 
 struct Point {
@@ -11,6 +12,7 @@ struct Point {
     double y;
 };
 
+/// 4 double precision points
 struct PackedPoint {
     alignas(32)
     double x[4];
@@ -30,31 +32,26 @@ struct PackedPoint {
     }
 };
 
+/// 4 double precision segments
 struct PackedSegment {
     PackedPoint start;
     PackedPoint finish;
-
-    PackedSegment() = default;
-
-    PackedSegment(const PackedPoint& point1, const PackedPoint& point2) {
-        start = {point1.x, point1.y};
-        finish = {point2.x, point2.y};
-    }
 };
 
+using RadianAngle = double;
+
+/// normalized direction vector
 struct DoubleDirection {
     double cos;
     double sin;
 
     DoubleDirection(double in_cos, double in_sin) : cos(in_cos), sin(in_sin) {}
 
-    DoubleDirection(double angle) : cos(std::cos(angle)), sin(std::sin(angle)) {}
+    DoubleDirection(RadianAngle angle) : cos(std::cos(angle)), sin(std::sin(angle)) {}
 };
 
-using RadianAngle = double;
-
 // Points
-extern "C" PackedPoint Translate_asm(const PackedPoint& p, Point delta);
+//extern "C" PackedPoint Translate_asm(const PackedPoint& p, Point delta);
 
 inline PackedPoint Translate_imm(const PackedPoint& p, Point delta) {
     const auto x_new = _mm256_add_pd(_mm256_load_pd(p.x), _mm256_set1_pd(delta.x));
@@ -74,13 +71,15 @@ inline PackedPoint Translate_cpp(const PackedPoint& p, Point delta) {
     return res;
 }
 
-extern "C" PackedPoint Rotate_asm(const PackedPoint& p, DoubleDirection dir);
+//extern "C" PackedPoint Rotate_asm(const PackedPoint& p, DoubleDirection dir);
+//
+//inline PackedPoint Rotate_asm(const PackedPoint& p, RadianAngle angle) {
+//    return Rotate_asm(p, DoubleDirection(angle));
+//}
 
-inline PackedPoint Rotate_asm(const PackedPoint& p, RadianAngle angle) {
-    return Rotate_asm(p, DoubleDirection(angle));
-}
-
-inline PackedPoint Rotate_imm(const PackedPoint& p, RadianAngle angle) {
+inline PackedPoint Rotate_imm(const PackedPoint& p, ///< Rotatable points
+                              RadianAngle angle ///< Counterclockwise rotation angle
+                              ) {
     const DoubleDirection dir(angle);
     const auto packed_cos = _mm256_set1_pd(dir.cos);
     const auto packed_sin = _mm256_set1_pd(dir.sin);
@@ -107,7 +106,9 @@ inline PackedPoint Rotate_cpp(const PackedPoint& p, RadianAngle angle) {
 }
 
 // Segment
-inline PackedSegment Translate_imm(const PackedSegment& s, Point delta) {
+inline PackedSegment Translate_imm(const PackedSegment& s, ///< Translatable segments
+                                   Point delta ///< Offset
+                                   ) {
     const auto packed_dx = _mm256_set1_pd(delta.x);
     const auto packed_dy = _mm256_set1_pd(delta.y);
     PackedSegment res;
@@ -125,7 +126,9 @@ inline PackedSegment Translate_cpp(const PackedSegment& s, Point delta) {
     return res;
 }
 
-inline PackedSegment Rotate_imm(const PackedSegment& s, RadianAngle angle) {
+inline PackedSegment Rotate_imm(const PackedSegment& s, ///< Rotatable segments
+                                RadianAngle angle ///< Counterclockwise rotation angle
+                                ) {
     const DoubleDirection dir(angle);
     const auto packed_cos = _mm256_set1_pd(dir.cos);
     const auto packed_sin = _mm256_set1_pd(dir.sin);

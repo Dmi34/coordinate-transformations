@@ -1,11 +1,10 @@
 # Coordinate transformations
-transform.h lib contains functions for rotation and translation of packed points and packed segments.
+DoubleGeometry namespace contains functions for rotation and translation of double precision packed points and packed segments.
 
-`void TranslateF<size>_<implementation>(PackedPoint* p, Point delta)`
+Most effective functions: 
+- `PackedPoint Translate_imm(const PackedPoint& p, Point delta)`
+- `PackedPoint Rotate_imm(const PackedPoint& p, RadianAngle angle)`
+- `PackedSegment Translate_imm(const PackedSegment& s, Point delta)`
+- `PackedSegment Rotate_imm(const PackedSegment& s, RadianAngle angle)`
 
-size (32 or 64) --- size of floating-point numbers in bits
-
-| \<Implementation\> | Definition       |
-|--------------------|:-----------------|
-| asm                | Func in assembly |
-| cell 21            | cell 22          |
+Also lib contains benchmarks for different implementation of transformations with/without avx.
