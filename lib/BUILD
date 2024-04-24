@@ -16,7 +16,7 @@ genrule(
 )
 
 cc_library(
-    name = "main",
+    name = "main64",
     srcs = [":assemble_translate", ":assemble_rotate"],
     hdrs = ["transform64.h"],
     copts = [
@@ -32,7 +32,7 @@ cc_test(
     # size = "small",
     srcs = ["bench64.cpp"],
     deps = [
-        ":main",
+        ":main64",
         "@catch2//:catch2_main",
     ],
     copts = [
@@ -62,7 +62,51 @@ cc_test(
     # size = "small",
     srcs = ["test64.cpp"],
     deps = [
-        ":main",
+        ":main64",
+        "@catch2//:catch2_main",
+    ],
+    copts = [
+        "-m64",
+        "-mavx2",
+        "-mfma",
+        "-O3"
+    ]
+)
+
+cc_library(
+    name = "main32",
+    # srcs = [":assemble_translate", ":assemble_rotate"],
+    hdrs = ["transform32.h"],
+    copts = [
+        "-m64",
+        "-mavx2",
+        "-mfma",
+        "-O3"
+    ]
+)
+
+cc_test(
+    name = "benchmark32",
+    # size = "small",
+    srcs = ["bench32.cpp"],
+    deps = [
+        ":main32",
+        "@catch2//:catch2_main",
+    ],
+    copts = [
+        "-m64",
+        "-mavx2",
+        "-mfma",
+        "-O3"
+    ]
+)
+
+cc_test(
+    name = "test32",
+    # size = "small",
+    srcs = ["test32.cpp"],
+    deps = [
+        ":main32",
         "@catch2//:catch2_main",
     ],
     copts = [
