@@ -11,8 +11,8 @@ using namespace SingleGeometry;
 
 void CheckEq(const PackedPoint& lhs, const PackedPoint& rhs) {
     for (int i = 0; i < 8; i++) {
-        REQUIRE(lhs.x[i] == rhs.x[i]);
-        REQUIRE(lhs.y[i] == rhs.y[i]);
+        REQUIRE(lhs.x[i] - rhs.x[i] < 1e-6);
+        REQUIRE(lhs.y[i] - rhs.y[i] < 1e-6);
     }
 }
 

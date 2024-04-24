@@ -11,9 +11,8 @@ using namespace DoubleGeometry;
 
 void CheckEq(const PackedPoint& lhs, const PackedPoint& rhs) {
     for (int i = 0; i < 4; i++) {
-        //fix for error in double comparison with ==. Rewrite for better precision.
-        REQUIRE(lhs.x[i] - rhs.x[i] < 0.000001);
-        REQUIRE(lhs.y[i] - rhs.y[i] < 0.000001);
+        REQUIRE(lhs.x[i] - rhs.x[i] < 1e-9);
+        REQUIRE(lhs.y[i] - rhs.y[i] < 1e-9);
     }
 }
 
@@ -95,7 +94,9 @@ TEST_CASE("Test Translate Segment") {
         PackedPoint p4{points2[2], points2[3]};
         PackedSegment seg1{p1, p2};
         PackedSegment seg2{p1, p2};
-        CheckEq(Translate_cpp(seg1, delta), Translate_imm(seg2, delta));
+        PackedSegment result = Translate_cpp(seg2, delta);
+        CheckEq(Translate_imm(seg1, delta), result);
+        CheckEq(Translate_asm(seg1, delta), result);
     }
 }
 
@@ -120,7 +121,9 @@ TEST_CASE("Test Rotate Segmanet") {
         PackedPoint p4{points2[2], points2[3]};
         PackedSegment seg1{p1, p2};
         PackedSegment seg2{p1, p2};
-        CheckEq(Rotate_cpp(seg1, angle), Rotate_imm(seg2, angle));
+        PackedSegment result = Rotate_cpp(seg2, angle);
+        CheckEq(Rotate_imm(seg1, angle), result);
+        CheckEq(Rotate_asm(seg1, angle), result);
     }
 }
 

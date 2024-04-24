@@ -51,11 +51,11 @@ struct DoubleDirection {
 };
 
 // Points
-extern "C" void Translate_asm(const PackedPoint* target, const PackedPoint& p, Point delta);
+extern "C" void TranslatePoint_asm(const PackedPoint* target, const PackedPoint& p, Point delta);
 
 inline PackedPoint Translate_asm(const PackedPoint& p, Point delta) {
     PackedPoint result;
-    Translate_asm(&result, p, delta);
+    TranslatePoint_asm(&result, p, delta);
     return result;
 }
 
@@ -77,11 +77,11 @@ inline PackedPoint Translate_cpp(const PackedPoint& p, Point delta) {
     return res;
 }
 
-extern "C" void Rotate_asm(const PackedPoint* target, const PackedPoint& p, DoubleDirection dir);
+extern "C" void RotatePoint_asm(const PackedPoint* target, const PackedPoint& p, DoubleDirection dir);
 
 inline PackedPoint Rotate_asm(const PackedPoint& p, RadianAngle angle) {
     PackedPoint result;
-    Rotate_asm(&result, p, DoubleDirection(angle));
+    RotatePoint_asm(&result, p, DoubleDirection(angle));
     return result;
 }
 
@@ -114,6 +114,15 @@ inline PackedPoint Rotate_cpp(const PackedPoint& p, RadianAngle angle) {
 }
 
 // Segment
+
+extern "C" void TranslateSegment_asm(const PackedSegment* target, const PackedSegment& p, Point delta);
+
+inline PackedSegment Translate_asm(const PackedSegment& p, Point delta) {
+    PackedSegment result;
+    TranslateSegment_asm(&result, p, delta);
+    return result;
+}
+
 inline PackedSegment Translate_imm(const PackedSegment& s, ///< Translatable segments
                                    Point delta ///< Offset
                                    ) {
@@ -132,6 +141,14 @@ inline PackedSegment Translate_cpp(const PackedSegment& s, Point delta) {
     res.start = Translate_cpp(s.start, delta);
     res.finish = Translate_cpp(s.finish, delta);
     return res;
+}
+
+extern "C" void RotateSegment_asm(const PackedSegment* target, const PackedSegment& p, DoubleDirection dir);
+
+inline PackedSegment Rotate_asm(const PackedSegment& p, RadianAngle angle) {
+    PackedSegment result;
+    RotateSegment_asm(&result, p, DoubleDirection(angle));
+    return result;
 }
 
 inline PackedSegment Rotate_imm(const PackedSegment& s, ///< Rotatable segments
