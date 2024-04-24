@@ -51,7 +51,13 @@ struct DoubleDirection {
 };
 
 // Points
-//extern "C" PackedPoint Translate_asm(const PackedPoint& p, Point delta);
+extern "C" void Translate_asm(const PackedPoint* target, const PackedPoint& p, Point delta);
+
+inline PackedPoint Translate_asm(const PackedPoint& p, Point delta) {
+    PackedPoint result;
+    Translate_asm(&result, p, delta);
+    return result;
+}
 
 inline PackedPoint Translate_imm(const PackedPoint& p, Point delta) {
     const auto x_new = _mm256_add_pd(_mm256_load_pd(p.x), _mm256_set1_pd(delta.x));
@@ -71,11 +77,13 @@ inline PackedPoint Translate_cpp(const PackedPoint& p, Point delta) {
     return res;
 }
 
-//extern "C" PackedPoint Rotate_asm(const PackedPoint& p, DoubleDirection dir);
-//
-//inline PackedPoint Rotate_asm(const PackedPoint& p, RadianAngle angle) {
-//    return Rotate_asm(p, DoubleDirection(angle));
-//}
+extern "C" void Rotate_asm(const PackedPoint* target, const PackedPoint& p, DoubleDirection dir);
+
+inline PackedPoint Rotate_asm(const PackedPoint& p, RadianAngle angle) {
+    PackedPoint result;
+    Rotate_asm(&result, p, DoubleDirection(angle));
+    return result;
+}
 
 inline PackedPoint Rotate_imm(const PackedPoint& p, ///< Rotatable points
                               RadianAngle angle ///< Counterclockwise rotation angle

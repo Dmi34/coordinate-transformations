@@ -13,9 +13,13 @@ TEST_CASE("BENCHMARKS FOR TRANSLATE") {
     double x[4] = {1, 2, 3, 4};
     double y[4] = {1, 2, 3, 4};
     PackedPoint p{x, y};
-    // BENCHMARK("TEST TranslateP64_asm") {
-    //     return TranslateP64_asm(p, delta);
-    // };
+    PackedPoint dummy;
+    BENCHMARK("TEST TranslateP64_asm unwrapped") {
+        return Translate_asm(&dummy, p, delta);
+    };
+    BENCHMARK("TEST TranslateP64_asm wrapped") {
+        return Translate_asm(p, delta);
+    };
     BENCHMARK("TEST TranslateP64_imm") {
         return Translate_imm(p, delta);
     };
@@ -29,9 +33,14 @@ TEST_CASE("BENCHMARKS FOR ROTATE") {
     double y[4] = {1, 2, 3, 4};
     PackedPoint p{x, y};
     double angle = M_PI / 4;
-    // BENCHMARK("TEST RotateP64_asm") {
-    //     return RotateP64_asm(p, angle);
-    // };
+    PackedPoint dummy;
+    DoubleDirection dir(angle);
+    BENCHMARK("TEST RotateP64_asm unwrapped") {
+        return Rotate_asm(&dummy, p, dir);
+    };
+    BENCHMARK("TEST RotateP64_asm wrapped") {
+        return Rotate_asm(p, angle);
+    };
     BENCHMARK("TEST RotateP64_imm") {
         return Rotate_imm(p, angle);
     };
