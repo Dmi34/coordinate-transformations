@@ -39,3 +39,34 @@ TEST_CASE("BENCHMARKS FOR ROTATE") {
         return Rotate_cpp(p, angle);
     };
 }
+
+TEST_CASE("BENCHMARKS FOR TRANSLATE SEGMENT") {
+    Point delta{1, 1};
+    double x1[4] = {1, 2, 3, 4};
+    double x2[4] = {2, 3, 4, 5};
+    double y1[4] = {1, 2, 3, 4};
+    double y2[4] = {2, 3, 4, 5};
+    PackedSegment seg{{x1, y1}, {x2, y2}};
+    BENCHMARK("TEST Translate_imm") {
+        return Translate_imm(seg, delta);
+    };
+    BENCHMARK("TEST Translate_cpp") {
+        return Translate_cpp(seg, delta);
+    };
+}
+
+TEST_CASE("BENCHMARKS FOR ROTATE SEGMENT") {
+    double angle = M_PI_2;
+    double x1[4] = {1, 2, 3, 4};
+    double x2[4] = {2, 3, 4, 5};
+    double y1[4] = {1, 2, 3, 4};
+    double y2[4] = {2, 3, 4, 5};
+    PackedSegment seg{{x1, y1}, {x2, y2}};
+    BENCHMARK("TEST Rotate_imm") {
+        return Rotate_imm(seg, angle);
+    };
+    BENCHMARK("TEST Rotate_cpp") {
+        return Rotate_cpp(seg, angle);
+    };
+}
+
