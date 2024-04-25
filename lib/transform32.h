@@ -53,6 +53,14 @@ struct floatDirection {
 // Points
 //extern "C" PackedPoint Translate_asm(const PackedPoint& p, Point delta);
 
+extern "C" void TranslatePoint_asm(const PackedPoint* target, const PackedPoint& p, Point delta);
+
+inline PackedPoint Translate_asm(const PackedPoint& p, Point delta) {
+    PackedPoint result;
+    TranslatePoint_asm(&result, p, delta);
+    return result;
+}
+
 inline PackedPoint Translate_imm(const PackedPoint& p, Point delta) {
     const auto x_new = _mm256_add_ps(_mm256_load_ps(p.x), _mm256_set1_ps(delta.x));
     const auto y_new = _mm256_add_ps(_mm256_load_ps(p.y), _mm256_set1_ps(delta.y));

@@ -2,22 +2,22 @@ load("//tools/bazel:nasm_library.bzl", "nasm_library")
 load("@rules_cc//cc:defs.bzl", "cc_library", "cc_test")
 
 genrule(
-    name = "assemble_translate",
-    srcs = ["translate.asm"],
-    outs = ["assemble_translate.o"],
-    cmd = "nasm -f elf64 -g -F dwarf -o $@ $(location translate.asm)",
+    name = "assemble_translate64",
+    srcs = ["translate64.asm"],
+    outs = ["assemble_translate64.o"],
+    cmd = "nasm -f elf64 -g -F dwarf -o $@ $(location translate64.asm)",
 )
 
 genrule(
-    name = "assemble_rotate",
-    srcs = ["rotate.asm"],
-    outs = ["assemble_rotate.o"],
-    cmd = "nasm -f elf64 -g -F dwarf -o $@ $(location rotate.asm)",
+    name = "assemble_rotate64",
+    srcs = ["rotate64.asm"],
+    outs = ["assemble_rotate64.o"],
+    cmd = "nasm -f elf64 -g -F dwarf -o $@ $(location rotate64.asm)",
 )
 
 cc_library(
     name = "main64",
-    srcs = [":assemble_translate", ":assemble_rotate"],
+    srcs = [":assemble_translate64", ":assemble_rotate64"],
     hdrs = ["transform64.h"],
     copts = [
         "-m64",
@@ -73,9 +73,19 @@ cc_test(
     ]
 )
 
+
+genrule(
+    name = "assemble_translate32",
+    srcs = ["translate32.asm"],
+    outs = ["assemble_translate32.o"],
+    cmd = "nasm -f elf64 -g -F dwarf -o $@ $(location translate32.asm)",
+)
+
 cc_library(
     name = "main32",
-    # srcs = [":assemble_translate", ":assemble_rotate"],
+    srcs = [":assemble_translate32", 
+    # ":assemble_rotate"
+    ],
     hdrs = ["transform32.h"],
     copts = [
         "-m64",
