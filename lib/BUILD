@@ -81,11 +81,16 @@ genrule(
     cmd = "nasm -f elf64 -g -F dwarf -o $@ $(location translate32.asm)",
 )
 
+genrule(
+    name = "assemble_rotate32",
+    srcs = ["rotate32.asm"],
+    outs = ["assemble_rotate32.o"],
+    cmd = "nasm -f elf64 -g -F dwarf -o $@ $(location rotate32.asm)",
+)
+
 cc_library(
     name = "main32",
-    srcs = [":assemble_translate32", 
-    # ":assemble_rotate"
-    ],
+    srcs = [":assemble_translate32", ":assemble_rotate32"],
     hdrs = ["transform32.h"],
     copts = [
         "-m64",

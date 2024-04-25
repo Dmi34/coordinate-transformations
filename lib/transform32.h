@@ -41,17 +41,14 @@ struct PackedSegment {
 using RadianAngle = float;
 
 /// normalized direction vector
-struct floatDirection {
+struct FloatDirection {
     float cos;
     float sin;
 
-    floatDirection(float in_cos, float in_sin) : cos(in_cos), sin(in_sin) {}
+    FloatDirection(float in_cos, float in_sin) : cos(in_cos), sin(in_sin) {}
 
-    floatDirection(RadianAngle angle) : cos(std::cos(angle)), sin(std::sin(angle)) {}
+    FloatDirection(RadianAngle angle) : cos(std::cos(angle)), sin(std::sin(angle)) {}
 };
-
-// Points
-//extern "C" PackedPoint Translate_asm(const PackedPoint& p, Point delta);
 
 extern "C" void TranslatePoint_asm(const PackedPoint* target, const PackedPoint& p, Point delta);
 
@@ -79,16 +76,18 @@ inline PackedPoint Translate_cpp(const PackedPoint& p, Point delta) {
     return res;
 }
 
-//extern "C" PackedPoint Rotate_asm(const PackedPoint& p, floatDirection dir);
-//
-//inline PackedPoint Rotate_asm(const PackedPoint& p, RadianAngle angle) {
-//    return Rotate_asm(p, floatDirection(angle));
-//}
+extern "C" void RotatePoint_asm(const PackedPoint* target, const PackedPoint& p, FloatDirection dir);
+
+inline PackedPoint Rotate_asm(const PackedPoint& p, RadianAngle angle) {
+    PackedPoint result;
+    RotatePoint_asm(&result, p, FloatDirection(angle));
+    return result;
+}
 
 inline PackedPoint Rotate_imm(const PackedPoint& p, ///< Rotatable points
                               RadianAngle angle ///< Counterclockwise rotation angle
                               ) {
-    const floatDirection dir(angle);
+    const FloatDirection dir(angle);
     const auto packed_cos = _mm256_set1_ps(dir.cos);
     const auto packed_sin = _mm256_set1_ps(dir.sin);
 
@@ -103,7 +102,7 @@ inline PackedPoint Rotate_imm(const PackedPoint& p, ///< Rotatable points
 }
 
 inline PackedPoint Rotate_cpp(const PackedPoint& p, RadianAngle angle) {
-    const floatDirection dir(angle);
+    const FloatDirection dir(angle);
     PackedPoint result;
     for (int i = 0; i < 8; i++) {
         const Point mem{p.x[i], p.y[i]};
@@ -114,6 +113,15 @@ inline PackedPoint Rotate_cpp(const PackedPoint& p, RadianAngle angle) {
 }
 
 // Segment
+
+extern "C" void TranslateSegment_asm(const PackedSegment* target, const PackedSegment& p, Point delta);
+
+inline PackedSegment Translate_asm(const PackedSegment& p, Point delta) {
+    PackedSegment result;
+    TranslateSegment_asm(&result, p, delta);
+    return result;
+}
+
 inline PackedSegment Translate_imm(const PackedSegment& s, ///< Translatable segments
                                    Point delta ///< Offset
                                    ) {
@@ -134,10 +142,18 @@ inline PackedSegment Translate_cpp(const PackedSegment& s, Point delta) {
     return res;
 }
 
+extern "C" void RotateSegment_asm(const PackedSegment* target, const PackedSegment& p, FloatDirection dir);
+
+inline PackedSegment Rotate_asm(const PackedSegment& p, RadianAngle angle) {
+    PackedSegment result;
+    RotateSegment_asm(&result, p, FloatDirection(angle));
+    return result;
+}
+
 inline PackedSegment Rotate_imm(const PackedSegment& s, ///< Rotatable segments
                                 RadianAngle angle ///< Counterclockwise rotation angle
                                 ) {
-    const floatDirection dir(angle);
+    const FloatDirection dir(angle);
     const auto packed_cos = _mm256_set1_ps(dir.cos);
     const auto packed_sin = _mm256_set1_ps(dir.sin);
 

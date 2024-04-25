@@ -13,13 +13,17 @@ TEST_CASE("BENCHMARKS FOR TRANSLATE") {
     float x[8] = {1, 2, 3, 4, 5, 6, 7, 8};
     float y[8] = {1, 2, 3, 4, 5, 6, 7, 8};
     PackedPoint p{x, y};
-    // BENCHMARK("TEST TranslateP64_asm") {
-    //     return TranslateP64_asm(p, delta);
-    // };
-    BENCHMARK("TEST TranslateP32_imm") {
+    PackedPoint dummy;
+    BENCHMARK("TEST Translate_asm unwrapped") {
+        return TranslatePoint_asm(&dummy, p, delta);
+    };
+    BENCHMARK("TEST Translate_asm wrapped") {
+        return Translate_asm(p, delta);
+    };
+    BENCHMARK("TEST Translate_imm") {
         return Translate_imm(p, delta);
     };
-    BENCHMARK("TEST TranslateP32_cpp") {
+    BENCHMARK("TEST Translate_cpp") {
         return Translate_cpp(p, delta);
     };
 }
@@ -29,13 +33,18 @@ TEST_CASE("BENCHMARKS FOR ROTATE") {
     float y[8] = {1, 2, 3, 4, 5, 6, 7, 8};
     PackedPoint p{x, y};
     float angle = M_PI / 4;
-    // BENCHMARK("TEST RotateP64_asm") {
-    //     return RotateP64_asm(p, angle);
-    // };
-    BENCHMARK("TEST RotateP32_imm") {
+    PackedPoint dummy;
+    FloatDirection dir(angle);
+    BENCHMARK("TEST Rotate_asm unwrapped") {
+        return RotatePoint_asm(&dummy, p, dir);
+    };
+    BENCHMARK("TEST Rotate_asm wrapped") {
+        return Rotate_asm(p, angle);
+    };
+    BENCHMARK("TEST Rotate_imm") {
         return Rotate_imm(p, angle);
     };
-    BENCHMARK("TEST RotateP32_cpp") {
+    BENCHMARK("TEST Rotate_cpp") {
         return Rotate_cpp(p, angle);
     };
 }
@@ -47,6 +56,13 @@ TEST_CASE("BENCHMARKS FOR TRANSLATE SEGMENT") {
     float y1[8] = {1, 2, 3, 4, 5, 6, 7, 8};
     float y2[8] = {2, 3, 4, 5, 6, 7, 8, 9};
     PackedSegment seg{{x1, y1}, {x2, y2}};
+    PackedSegment dummy;
+    BENCHMARK("TEST Translate_asm unwrapped") {
+        return TranslateSegment_asm(&dummy, seg, delta);
+    };
+    BENCHMARK("TEST Translate_asm wrapped") {
+        return Translate_asm(seg, delta);
+    };
     BENCHMARK("TEST Translate_imm") {
         return Translate_imm(seg, delta);
     };
@@ -62,6 +78,14 @@ TEST_CASE("BENCHMARKS FOR ROTATE SEGMENT") {
     float y1[8] = {1, 2, 3, 4, 5, 6, 7, 8};
     float y2[8] = {2, 3, 4, 5, 6, 7, 8, 9};
     PackedSegment seg{{x1, y1}, {x2, y2}};
+    PackedSegment dummy;
+    FloatDirection dir(angle);
+    BENCHMARK("TEST Rotate_asm unwrapped") {
+        return RotateSegment_asm(&dummy, seg, dir);
+    };
+    BENCHMARK("TEST Rotate_asm wrapped") {
+        return Rotate_asm(seg, angle);
+    };
     BENCHMARK("TEST Rotate_imm") {
         return Rotate_imm(seg, angle);
     };
