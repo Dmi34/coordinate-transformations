@@ -1,4 +1,3 @@
-load("//tools/bazel:nasm_library.bzl", "nasm_library")
 load("@rules_cc//cc:defs.bzl", "cc_library", "cc_test")
 
 genrule(
@@ -40,20 +39,6 @@ cc_test(
         "-mavx2",
         "-mfma",
         "-O3"
-        # "-O2",
-        # "-fgcse-after-reload",
-        # "-fipa-cp-clone",
-        # "-floop-interchange",
-        # "-floop-unroll-and-jam",
-        # "-fpeel-loops",
-        # "-fpredictive-commoning",
-        # "-fsplit-loops",
-        # "-fsplit-paths",
-        # "-ftree-loop-distribution",
-        # "-ftree-partial-pre",
-        # "-funswitch-loops",
-        # "-fvect-cost-model=dynamic",
-        # "-fversion-loops-for-strides",
     ]
 )
 
