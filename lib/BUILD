@@ -1,4 +1,3 @@
-load("//tools/bazel:nasm_library.bzl", "nasm_library")
 load("@rules_cc//cc:defs.bzl", "cc_library", "cc_test")
 
 genrule(

@@ -6,10 +6,6 @@ test --test_verbose_timeout_warnings
 build --cxxopt='-std=c++20'
 test --cxxopt='-std=c++20'
 
-# TODO(sokolik): doesn't work with  assembler
-# build --copt="--language=c++"
-# test --copt="--language=c++"
-
 build --copt="-fdiagnostics-color=always"
 # Use cursor controls in screen output.
 # Docs: https://bazel.build/docs/user-manual#curses
@@ -142,31 +138,6 @@ build:clang-tidy --@bazel_clang_tidy//:clang_tidy_config=//:clang_tidy_config
 build:clang-format --aspects @bazel_clang_format//:defs.bzl%clang_format_aspect
 build:clang-format --@bazel_clang_format//:config=//:clang_format_config
 build:clang-format --output_groups=report
-
-# Continuous Integration tool
-##########################################################
-# Use `bazel build --config=ci` to enable these settings #
-##########################################################
-
-query:ci --noshow_progress
-query:ci --noshow_loading_progress
-fetch:ci --noshow_progress
-fetch:ci --noshow_loading_progress
-fetch:ci --show_task_finish
-fetch:ci --keep_going
-build:ci --noshow_progress
-build:ci --noshow_loading_progress
-build:ci --show_task_finish
-build:ci --action_env=PATH
-build:ci --keep_going
-build:ci --verbose_failures
-build:ci --test_output=errors
-test:ci --test_env=CI
-
-# Setup compiler flags - required for Qt6 is at least C++17
-build:gcc9 --cxxopt=-std=c++2a
-build:gcc9 --cxxopt=-Wall
-build:gcc9 --cxxopt=-Werror
 
 # GCC 11.2
 #build:gcc11 --cxxopt=-std=c++23 # blocked by emsdk
