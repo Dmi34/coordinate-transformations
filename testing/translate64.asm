@@ -1,12 +1,11 @@
 ;------------------------------------------------------------------------------
-; void Translate_asm(PackedPoint* target, const PackedPoint& p, Point delta);
+; void TranslateAsm(PackedPoint* dest, const PackedPoint& p, Point delta);
 ;------------------------------------------------------------------------------
         section .text
 
-        global TranslatePoint_asm
-        global TranslateSegment_asm
+        global TranslateAsm
 
-TranslatePoint_asm:
+TranslateAsm:
         vmovapd ymm2, [rsi]
         vmovapd ymm3, [rsi + 32]
         vbroadcastsd ymm0, xmm0
