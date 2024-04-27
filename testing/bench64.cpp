@@ -1,26 +1,21 @@
 #include "transform.h"
-
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/benchmark/catch_benchmark_all.hpp>
-#include <catch2/matchers/catch_matchers.hpp>
-#include <catch2/matchers/catch_matchers_range_equals.hpp>
-#include <cmath>
-#include <iostream>
 
 using namespace DoubleGeometry;
 
-TEST_CASE("BENCHMARKS FOR TRANSLATE") {
+TEST_CASE("BENCHMARKS FOR TRANSLATE POINT") {
     Point delta{1, 1};
     double x[4] = {1, 2, 3, 4};
     double y[4] = {1, 2, 3, 4};
     PackedPoint p{x, y};
-//    PackedPoint dummy;
-//    BENCHMARK("TEST TranslateAsm (unwrapped)") {
-//        return TranslateAsm(&dummy, p, delta);
-//    };
-//    BENCHMARK("TEST TranslateAsm wrapped") {
-//        return TranslateAsm(p, delta);
-//    };
+   PackedPoint dummy;
+   BENCHMARK("TEST TranslateDoublePointAsm") {
+       return TranslateDoublePointAsm(&dummy, p, delta);
+   };
+   BENCHMARK("TEST TranslateAsm") {
+       return TranslateAsm(p, delta);
+   };
     BENCHMARK("TEST TranslateImm") {
         return TranslateImm(p, delta);
     };
@@ -29,19 +24,19 @@ TEST_CASE("BENCHMARKS FOR TRANSLATE") {
     };
 }
 
-TEST_CASE("BENCHMARKS FOR ROTATE") {
+TEST_CASE("BENCHMARKS FOR ROTATE POINT") {
     double x[4] = {1, 2, 3, 4};
     double y[4] = {1, 2, 3, 4};
     PackedPoint p{x, y};
     double angle = M_PI / 4;
-//    PackedPoint dummy;
-//    Direction dir(angle);
-//    BENCHMARK("TEST RotateAsm (unwrapped)") {
-//        return RotateAsm(&dummy, p, dir);
-//    };
-//    BENCHMARK("TEST RotateAsm wrapped") {
-//        return RotateAsm(p, angle);
-//    };
+   PackedPoint dummy;
+   Direction dir(angle);
+   BENCHMARK("TEST RotateDoublePointAsm") {
+       return RotateDoublePointAsm(&dummy, p, dir);
+   };
+   BENCHMARK("TEST RotateAsm") {
+       return RotateAsm(p, angle);
+   };
     BENCHMARK("TEST RotateImm") {
         return RotateImm(p, angle);
     };
@@ -57,13 +52,13 @@ TEST_CASE("BENCHMARKS FOR TRANSLATE SEGMENT") {
     double y1[4] = {1, 2, 3, 4};
     double y2[4] = {2, 3, 4, 5};
     PackedSegment seg{{x1, y1}, {x2, y2}};
-//    PackedSegment dummy;
-//    BENCHMARK("TEST TranslateSegmentAsm (unwrapped)") {
-//        return TranslateSegmentAsm(&dummy, seg, delta);
-//    };
-//    BENCHMARK("TEST TranslateAsm wrapped") {
-//        return TranslateAsm(seg, delta);
-//    };
+   PackedSegment dummy;
+   BENCHMARK("TEST TranslateDoubleSegmentAsm") {
+       return TranslateDoubleSegmentAsm(&dummy, seg, delta);
+   };
+   BENCHMARK("TEST TranslateAsm") {
+       return TranslateAsm(seg, delta);
+   };
     BENCHMARK("TEST TranslateImm") {
         return TranslateImm(seg, delta);
     };
@@ -80,13 +75,13 @@ TEST_CASE("BENCHMARKS FOR ROTATE SEGMENT") {
     double y2[4] = {2, 3, 4, 5};
     Direction dir(angle);
     PackedSegment seg{{x1, y1}, {x2, y2}};
-//    PackedSegment dummy;
-//    BENCHMARK("TEST RotateSegmentAsm (unwrapped)") {
-//        return RotateSegmentAsm(&dummy, seg, dir);
-//    };
-//    BENCHMARK("TEST RotateAsm wrapped") {
-//        return RotateAsm(seg, angle);
-//    };
+   PackedSegment dummy;
+   BENCHMARK("TEST RotateDoubleSegmentAsm") {
+       return RotateDoubleSegmentAsm(&dummy, seg, dir);
+   };
+   BENCHMARK("TEST RotateAsm") {
+       return RotateAsm(seg, angle);
+   };
     BENCHMARK("TEST RotateImm") {
         return RotateImm(seg, angle);
     };

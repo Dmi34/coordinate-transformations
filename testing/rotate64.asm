@@ -1,12 +1,12 @@
 ;------------------------------------------------------------------------------
-; void Rotate_asm(const PackedPoint* target, const PackedPoint& p, DoubleDirection dir);
+; void RotateDoublePointAsm(const PackedPoint* dest, const PackedPoint& p, Direction dir);
 ;------------------------------------------------------------------------------
         section .text
 
-        global RotatePoint_asm
-        global RotateSegment_asm
+        global RotateDoublePointAsm
+        global RotateDoubleSegmentAsm
 
-RotatePoint_asm:
+RotateDoublePointAsm:
         vbroadcastsd ymm0, xmm0
         vbroadcastsd ymm1, xmm1
         vmulpd ymm2, ymm0, [rsi] ; ymm2 = x*cos
@@ -19,10 +19,10 @@ RotatePoint_asm:
         ret
 
 ;--------------------------------------------------------------------------------------------------
-;void RotateSegment_asm(const PackedSegment* target, const PackedSegment& p, DoubleDirection dir);
+;void RotateDoubleSegmentAsm(const PackedSegment* dest, const PackedSegment& s, Direction dir);
 ;--------------------------------------------------------------------------------------------------
 
-RotateSegment_asm:
+RotateDoubleSegmentAsm:
         vbroadcastsd ymm0, xmm0
         vbroadcastsd ymm1, xmm1
         vmulpd ymm2, ymm0, [rsi] ; ymm2 = x1*cos
