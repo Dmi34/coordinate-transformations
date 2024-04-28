@@ -1,41 +1,38 @@
-;------------------------------------------------------------------------------
-; void Translate_asm(PackedPoint* target, const PackedPoint& p, Point delta);
-;------------------------------------------------------------------------------
         section .text
 
-        global TranslatePoint_asm
-        global TranslateSegment_asm
+        global TranslatePointAsm
+        global TranslateSegmentAsm
 
-TranslatePoint_asm:
-        vmovaps ymm2, [rsi]
-        vmovaps ymm3, [rsi + 32]
-        vbroadcastss ymm1, xmm0
-        pshufd xmm0, xmm0, 0x55
-        vbroadcastss ymm0, xmm0
-        vaddps ymm2, ymm1
-        vaddps ymm3, ymm0
-        vmovaps [rdi], ymm2
-        vmovaps [rdi + 32], ymm3
+;------------------------------------------------------------------------------
+; void TranslatePointAsm(const PackedPoint* dest, const PackedPoint& p, Point delta);
+;------------------------------------------------------------------------------
+
+TranslatePointAsm:
+        vbroadcastsd ymm0, xmm0
+        vbroadcastsd ymm1, xmm1
+        vaddpd ymm0, [rsi]
+        vaddpd ymm1, [rsi + 32]
+        vmovapd [rdi], ymm0
+        vmovapd [rdi + 32], ymm1
         ret
 
 ;-----------------------------------------------------------------------------------------------
-; void TranslateSegment_asm(const PackedSegment* target, const PackedSegment& p, Point delta);
+; void TranslateSegmentAsm(const PackedSegment* dest, const PackedSegment& s, Point delta);
 ;-----------------------------------------------------------------------------------------------
 
-TranslateSegment_asm:
-        vmovaps ymm2, [rsi]
-        vmovaps ymm3, [rsi + 32]
-        vmovaps ymm4, [rsi + 64]
-        vmovaps ymm5, [rsi + 96]
-        vbroadcastss ymm1, xmm0
-        pshufd xmm0, xmm0, 0x55
-        vbroadcastss ymm0, xmm0
-        vaddps ymm2, ymm1
-        vaddps ymm3, ymm0
-        vaddps ymm4, ymm1
-        vaddps ymm5, ymm0
-        vmovaps [rdi], ymm2
-        vmovaps [rdi + 32], ymm3
-        vmovaps [rdi + 64], ymm4
-        vmovaps [rdi + 96], ymm5
+TranslateSegmentAsm:
+        vmovapd ymm2, [rsi]
+        vmovapd ymm3, [rsi + 32]
+        vmovapd ymm4, [rsi + 64]
+        vmovapd ymm5, [rsi + 96]
+        vbroadcastsd ymm0, xmm0
+        vbroadcastsd ymm1, xmm1
+        vaddpd ymm2, ymm0
+        vaddpd ymm3, ymm1
+        vaddpd ymm4, ymm0
+        vaddpd ymm5, ymm1
+        vmovapd [rdi], ymm2
+        vmovapd [rdi + 32], ymm3
+        vmovapd [rdi + 64], ymm4
+        vmovapd [rdi + 96], ymm5
         ret

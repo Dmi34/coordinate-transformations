@@ -222,7 +222,6 @@ inline PackedSegment RotateCpp(const PackedSegment& s, RadianAngle angle) {
 
 
 
-
 /// Transformations of points and segments with single-precision floating-point coordinates
 namespace SingleGeometry {
 
@@ -274,7 +273,7 @@ struct Direction {
 //------------------------------------------------------------------------------
 // Points transformations
 //------------------------------------------------------------------------------
-/*
+
 extern "C" void TranslatePointAsm(const PackedPoint* dest, const PackedPoint& p, Point delta);
 
 /// @param [in] p - Translatable packed point
@@ -285,7 +284,6 @@ inline PackedPoint TranslateAsm(const PackedPoint& p, Point delta) {
     TranslatePointAsm(&result, p, delta);
     return result;
 }
- */
 
 /// @param [in] p - Translatable packed point
 /// @param [in] delta - Offset
@@ -311,7 +309,6 @@ inline PackedPoint TranslateCpp(const PackedPoint& p, Point delta) {
     return res;
 }
 
-/*
 extern "C" void RotatePointAsm(const PackedPoint* dest, const PackedPoint& p, Direction dir);
 
 /// @param [in] p - Rotatable packed point
@@ -322,7 +319,6 @@ inline PackedPoint RotateAsm(const PackedPoint& p, RadianAngle angle) {
     RotatePointAsm(&result, p, Direction(angle));
     return result;
 }
- */
 
 /// @param [in] p - Rotatable packed point
 /// @param [in] angle - Rotation angle
@@ -361,7 +357,7 @@ inline PackedPoint RotateCpp(const PackedPoint& p, RadianAngle angle) {
 //------------------------------------------------------------------------------
 // Segments transformations
 //------------------------------------------------------------------------------
-/*
+
 extern "C" void TranslateSegmentAsm(const PackedSegment* dest, const PackedSegment& s, Point delta);
 
 /// @param [in] s - Translatable packed segment
@@ -372,7 +368,6 @@ inline PackedSegment TranslateAsm(const PackedSegment& s, Point delta) {
     TranslateSegmentAsm(&result, s, delta);
     return result;
 }
- */
 
 /// @param [in] s - Translatable packed segment
 /// @param [in] delta - Offset
@@ -397,7 +392,7 @@ inline PackedSegment TranslateCpp(const PackedSegment& s, Point delta) {
     res.finish = TranslateCpp(s.finish, delta);
     return res;
 }
-/*
+
 extern "C" void RotateSegmentAsm(const PackedSegment* dest, const PackedSegment& s, Direction dir);
 
 /// @param [in] s - Rotatable packed segment
@@ -408,7 +403,6 @@ inline PackedSegment RotateAsm(const PackedSegment& s, RadianAngle angle) {
     RotateSegmentAsm(&result, s, Direction(angle));
     return result;
 }
-*/
 
 /// @param [in] s - Rotatable packed segment
 /// @param [in] angle - Rotation angle

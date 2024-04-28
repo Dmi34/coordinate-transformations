@@ -47,9 +47,9 @@ TEST_CASE("Test Translate Point") {
         }
         PackedPoint p1{points[0], points[1]};
         PackedPoint p2{points[2], points[3]};
-        PackedPoint result = Translate_cpp(p2, delta);
-        CheckEq(Translate_imm(p1, delta), result);
-        CheckEq(Translate_asm(p1, delta), result);
+        PackedPoint result = TranslateCpp(p2, delta);
+        CheckEq(TranslateImm(p1, delta), result);
+        CheckEq(TranslateAsm(p1, delta), result);
     }
 }
 
@@ -67,9 +67,9 @@ TEST_CASE("Test Rotate Point") {
         }
         PackedPoint p1{points[0], points[1]};
         PackedPoint p2{points[2], points[3]};
-        PackedPoint result = Rotate_cpp(p2, angle);
-        CheckEq(Rotate_imm(p1, angle), result);
-        CheckEq(Rotate_asm(p1, angle), result);
+        PackedPoint result = RotateCpp(p2, angle);
+        CheckEq(RotateImm(p1, angle), result);
+        CheckEq(RotateAsm(p1, angle), result);
     }
 }
 
@@ -94,9 +94,9 @@ TEST_CASE("Test Translate Segment") {
         PackedPoint p4{points2[2], points2[3]};
         PackedSegment seg1{p1, p2};
         PackedSegment seg2{p1, p2};
-        PackedSegment result = Translate_cpp(seg2, delta);
-        CheckEq(Translate_imm(seg1, delta), result);
-        CheckEq(Translate_asm(seg1, delta), result);
+        PackedSegment result = TranslateCpp(seg2, delta);
+        CheckEq(TranslateImm(seg1, delta), result);
+        CheckEq(TranslateAsm(seg1, delta), result);
     }
 }
 
@@ -121,9 +121,9 @@ TEST_CASE("Test Rotate Segmanet") {
         PackedPoint p4{points2[2], points2[3]};
         PackedSegment seg1{p1, p2};
         PackedSegment seg2{p1, p2};
-        PackedSegment result = Rotate_cpp(seg2, angle);
-        CheckEq(Rotate_imm(seg1, angle), result);
-        CheckEq(Rotate_asm(seg1, angle), result);
+        PackedSegment result = RotateCpp(seg2, angle);
+        CheckEq(RotateImm(seg1, angle), result);
+        CheckEq(RotateAsm(seg1, angle), result);
     }
 }
 

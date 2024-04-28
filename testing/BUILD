@@ -1,22 +1,22 @@
 load("@rules_cc//cc:defs.bzl", "cc_library", "cc_test")
 
-#genrule(
-#    name = "assemble_translate64",
-#    srcs = ["translate64.asm"],
-#    outs = ["assemble_translate64.o"],
-#    cmd = "nasm -f elf64 -g -F dwarf -o $@ $(location translate64.asm)",
-#)
-#
-#genrule(
-#    name = "assemble_rotate64",
-#    srcs = ["rotate64.asm"],
-#    outs = ["assemble_rotate64.o"],
-#    cmd = "nasm -f elf64 -g -F dwarf -o $@ $(location rotate64.asm)",
-#)
+genrule(
+    name = "assemble_translate64",
+    srcs = ["translate64.asm"],
+    outs = ["assemble_translate64.o"],
+    cmd = "nasm -f elf64 -g -F dwarf -o $@ $(location translate64.asm)",
+)
+
+genrule(
+    name = "assemble_rotate64",
+    srcs = ["rotate64.asm"],
+    outs = ["assemble_rotate64.o"],
+    cmd = "nasm -f elf64 -g -F dwarf -o $@ $(location rotate64.asm)",
+)
 
 cc_library(
     name = "main64",
-#    srcs = [":assemble_translate64", ":assemble_rotate64"],
+    srcs = [":assemble_translate64", ":assemble_rotate64"],
     hdrs = ["transform.h"],
     copts = [
         "-m64",
@@ -39,7 +39,6 @@ cc_test(
         "-mavx2",
         "-mfma",
 #        "-O3"
-#        "-O2"
     ]
 )
 
@@ -55,7 +54,7 @@ cc_test(
         "-m64",
         "-mavx2",
         "-mfma",
-        "-O3"
+#        "-O3"
     ]
 )
 

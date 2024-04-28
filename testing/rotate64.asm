@@ -1,16 +1,18 @@
-;------------------------------------------------------------------------------
-; void Rotate_asm(const PackedPoint* target, const PackedPoint& p, DoubleDirection dir);
-;------------------------------------------------------------------------------
         section .text
 
-        global RotatePoint_asm
-        global RotateSegment_asm
+        global RotatePointAsm
+        global RotateSegmentAsm
 
-RotatePoint_asm:
+;------------------------------------------------------------------------------
+; void RotatePointAsm(const PackedPoint* dest, const PackedPoint& p, Direction dir);
+;------------------------------------------------------------------------------
+
+RotatePointAsm:
         vbroadcastsd ymm0, xmm0
         vbroadcastsd ymm1, xmm1
-        vmulpd ymm2, ymm0, [rsi] ; ymm2 = x*cos
-        vmulpd ymm3, ymm1, [rsi] ; ymm3 = x*sin
+        vmovapd ymm3, [rsi]
+        vmulpd ymm2, ymm0, ymm3 ; ymm2 = x*cos
+        vmulpd ymm3, ymm1 ; ymm3 = x*sin
         vmovapd ymm4, [rsi + 32] ; ymm4 = y
         vfnmadd231pd ymm2, ymm4, ymm1 ; ymm2 = -y*sin + x*cos
         vfmadd231pd ymm3, ymm4, ymm0 ; ymm3 = y*cos + x*sin
@@ -19,16 +21,18 @@ RotatePoint_asm:
         ret
 
 ;--------------------------------------------------------------------------------------------------
-;void RotateSegment_asm(const PackedSegment* target, const PackedSegment& p, DoubleDirection dir);
+; void RotateSegmentAsm(const PackedSegment* dest, const PackedSegment& s, Direction dir);
 ;--------------------------------------------------------------------------------------------------
 
-RotateSegment_asm:
+RotateSegmentAsm:
         vbroadcastsd ymm0, xmm0
         vbroadcastsd ymm1, xmm1
-        vmulpd ymm2, ymm0, [rsi] ; ymm2 = x1*cos
-        vmulpd ymm3, ymm1, [rsi] ; ymm3 = x1*sin
-        vmulpd ymm4, ymm0, [rsi + 64] ; ymm4 = x2*cos
-        vmulpd ymm5, ymm1, [rsi + 64] ; ymm5 = x2*sin
+        vmovapd ymm3, [rsi]
+        vmovapd ymm5, [rsi + 64]
+        vmulpd ymm2, ymm0, ymm3 ; ymm2 = x1*cos
+        vmulpd ymm3, ymm1 ; ymm3 = x1*sin
+        vmulpd ymm4, ymm0, ymm5 ; ymm4 = x2*cos
+        vmulpd ymm5, ymm1 ; ymm5 = x2*sin
         vmovapd ymm6, [rsi + 32] ; ymm6 = y1
         vmovapd ymm7, [rsi + 96] ; ymm7 = y2
         vfnmadd231pd ymm2, ymm6, ymm1 ; ymm2 = -y1*sin + x1*cos
