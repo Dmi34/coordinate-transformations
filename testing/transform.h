@@ -56,14 +56,14 @@ struct Direction {
 // Points transformations
 //------------------------------------------------------------------------------
 
-extern "C" void TranslatePointAsm(const PackedPoint* dest, const PackedPoint& p, Point delta);
+extern "C" void TranslateDoublePointAsm(const PackedPoint* dest, const PackedPoint& p, Point delta);
 
 /// @param [in] p - Translatable packed point
 /// @param [in] delta - Offset
 /// @returns Translated packed point
 inline PackedPoint TranslateAsm(const PackedPoint& p, Point delta) {
     PackedPoint result;
-    TranslatePointAsm(&result, p, delta);
+    TranslateDoublePointAsm(&result, p, delta);
     return result;
 }
 
@@ -91,14 +91,14 @@ inline PackedPoint TranslateCpp(const PackedPoint& p, Point delta) {
     return res;
 }
 
-extern "C" void RotatePointAsm(const PackedPoint* dest, const PackedPoint& p, Direction dir);
+extern "C" void RotateDoublePointAsm(const PackedPoint* dest, const PackedPoint& p, Direction dir);
 
 /// @param [in] p - Rotatable packed point
 /// @param [in] angle - Rotation angle
 /// @returns Rotated packed point
 inline PackedPoint RotateAsm(const PackedPoint& p, RadianAngle angle) {
     PackedPoint result;
-    RotatePointAsm(&result, p, Direction(angle));
+    RotateDoublePointAsm(&result, p, Direction(angle));
     return result;
 }
 
@@ -140,14 +140,14 @@ inline PackedPoint RotateCpp(const PackedPoint& p, RadianAngle angle) {
 // Segments transformations
 //------------------------------------------------------------------------------
 
-extern "C" void TranslateSegmentAsm(const PackedSegment* dest, const PackedSegment& s, Point delta);
+extern "C" void TranslateDoubleSegmentAsm(const PackedSegment* dest, const PackedSegment& s, Point delta);
 
 /// @param [in] s - Translatable packed segment
 /// @param [in] delta - Offset
 /// @returns Translated packed segment
 inline PackedSegment TranslateAsm(const PackedSegment& s, Point delta) {
     PackedSegment result;
-    TranslateSegmentAsm(&result, s, delta);
+    TranslateDoubleSegmentAsm(&result, s, delta);
     return result;
 }
 
@@ -175,14 +175,14 @@ inline PackedSegment TranslateCpp(const PackedSegment& s, Point delta) {
     return res;
 }
 
-extern "C" void RotateSegmentAsm(const PackedSegment* dest, const PackedSegment& s, Direction dir);
+extern "C" void RotateDoubleSegmentAsm(const PackedSegment* dest, const PackedSegment& s, Direction dir);
 
 /// @param [in] s - Rotatable packed segment
 /// @param [in] angle - Rotation angle
 /// @returns Rotated packed segment
 inline PackedSegment RotateAsm(const PackedSegment& s, RadianAngle angle) {
     PackedSegment result;
-    RotateSegmentAsm(&result, s, Direction(angle));
+    RotateDoubleSegmentAsm(&result, s, Direction(angle));
     return result;
 }
 
@@ -274,14 +274,14 @@ struct Direction {
 // Points transformations
 //------------------------------------------------------------------------------
 
-extern "C" void TranslatePointAsm(const PackedPoint* dest, const PackedPoint& p, Point delta);
+extern "C" void TranslateSinglePointAsm(const PackedPoint* dest, const PackedPoint& p, Point delta);
 
 /// @param [in] p - Translatable packed point
 /// @param [in] delta - Offset
 /// @returns Translated packed point
 inline PackedPoint TranslateAsm(const PackedPoint& p, Point delta) {
     PackedPoint result;
-    TranslatePointAsm(&result, p, delta);
+    TranslateSinglePointAsm(&result, p, delta);
     return result;
 }
 
@@ -302,21 +302,21 @@ inline PackedPoint TranslateImm(const PackedPoint& p, Point delta) {
 /// @returns Translated packed point
 inline PackedPoint TranslateCpp(const PackedPoint& p, Point delta) {
     PackedPoint res;
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 8; i++) {
         res.x[i] = p.x[i] + delta.x;
         res.y[i] = p.y[i] + delta.y;
     }
     return res;
 }
 
-extern "C" void RotatePointAsm(const PackedPoint* dest, const PackedPoint& p, Direction dir);
+extern "C" void RotateSinglePointAsm(const PackedPoint* dest, const PackedPoint& p, Direction dir);
 
 /// @param [in] p - Rotatable packed point
 /// @param [in] angle - Rotation angle
 /// @returns Rotated packed point
 inline PackedPoint RotateAsm(const PackedPoint& p, RadianAngle angle) {
     PackedPoint result;
-    RotatePointAsm(&result, p, Direction(angle));
+    RotateSinglePointAsm(&result, p, Direction(angle));
     return result;
 }
 
@@ -346,7 +346,7 @@ inline PackedPoint RotateImm(const PackedPoint& p, RadianAngle angle) {
 inline PackedPoint RotateCpp(const PackedPoint& p, RadianAngle angle) {
     const Direction dir(angle);
     PackedPoint result;
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 8; i++) {
         const Point mem{p.x[i], p.y[i]};
         result.x[i] = mem.x * dir.cos - mem.y * dir.sin;
         result.y[i] = mem.x * dir.sin + mem.y * dir.cos;
@@ -358,14 +358,14 @@ inline PackedPoint RotateCpp(const PackedPoint& p, RadianAngle angle) {
 // Segments transformations
 //------------------------------------------------------------------------------
 
-extern "C" void TranslateSegmentAsm(const PackedSegment* dest, const PackedSegment& s, Point delta);
+extern "C" void TranslateSingleSegmentAsm(const PackedSegment* dest, const PackedSegment& s, Point delta);
 
 /// @param [in] s - Translatable packed segment
 /// @param [in] delta - Offset
 /// @returns Translated packed segment
 inline PackedSegment TranslateAsm(const PackedSegment& s, Point delta) {
     PackedSegment result;
-    TranslateSegmentAsm(&result, s, delta);
+    TranslateSingleSegmentAsm(&result, s, delta);
     return result;
 }
 
@@ -393,14 +393,14 @@ inline PackedSegment TranslateCpp(const PackedSegment& s, Point delta) {
     return res;
 }
 
-extern "C" void RotateSegmentAsm(const PackedSegment* dest, const PackedSegment& s, Direction dir);
+extern "C" void RotateSingleSegmentAsm(const PackedSegment* dest, const PackedSegment& s, Direction dir);
 
 /// @param [in] s - Rotatable packed segment
 /// @param [in] angle - Rotation angle
 /// @returns Rotated packed segment
 inline PackedSegment RotateAsm(const PackedSegment& s, RadianAngle angle) {
     PackedSegment result;
-    RotateSegmentAsm(&result, s, Direction(angle));
+    RotateSingleSegmentAsm(&result, s, Direction(angle));
     return result;
 }
 

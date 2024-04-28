@@ -1,11 +1,8 @@
 #include "transform.h"
-#include <cmath>
 #include <iostream>
 #include <iomanip>
 #include <random>
 #include <catch2/catch_test_macros.hpp>
-#include <catch2/matchers/catch_matchers.hpp>
-#include <catch2/matchers/catch_matchers_range_equals.hpp>
 
 using namespace DoubleGeometry;
 
@@ -33,6 +30,7 @@ void Print(const PackedPoint& p, std::string message = "") {
 
 // Works slow under ASAN, UBSAN and other sanitizers, for sanitizing reduce the scale of randoms
 // and number of iterations
+
 TEST_CASE("Test Translate Point") {
     std::default_random_engine gen;
     std::uniform_real_distribution<double> distr(-100000.0, 100000.0);

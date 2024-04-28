@@ -13,7 +13,7 @@ cc_library(
 
 cc_test(
     name = "benchmark",
-    srcs = ["bench32.cpp", "bench64.cpp"],
+    srcs = ["benchmark.cpp"],
     deps = [
         ":main",
         "@catch2//:catch2_main",

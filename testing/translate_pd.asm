@@ -1,13 +1,12 @@
         section .text
 
-        global TranslatePointAsm
-        global TranslateSegmentAsm
+        global TranslateDoublePointAsm
+        global TranslateDoubleSegmentAsm
 
 ;------------------------------------------------------------------------------
-; void TranslatePointAsm(const PackedPoint* dest, const PackedPoint& p, Point delta);
+; void TranslateDoublePointAsm(const PackedPoint* dest, const PackedPoint& p, Point delta);
 ;------------------------------------------------------------------------------
-
-TranslatePointAsm:
+TranslateDoublePointAsm:
         vbroadcastsd ymm0, xmm0
         vbroadcastsd ymm1, xmm1
         vaddpd ymm0, [rsi]
@@ -17,10 +16,9 @@ TranslatePointAsm:
         ret
 
 ;-----------------------------------------------------------------------------------------------
-; void TranslateSegmentAsm(const PackedSegment* dest, const PackedSegment& s, Point delta);
+; void TranslateDoubleSegmentAsm(const PackedSegment* dest, const PackedSegment& s, Point delta);
 ;-----------------------------------------------------------------------------------------------
-
-TranslateSegmentAsm:
+TranslateDoubleSegmentAsm:
         vmovapd ymm2, [rsi]
         vmovapd ymm3, [rsi + 32]
         vmovapd ymm4, [rsi + 64]

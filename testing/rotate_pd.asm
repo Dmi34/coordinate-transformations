@@ -1,13 +1,12 @@
         section .text
 
-        global RotatePointAsm
-        global RotateSegmentAsm
+        global RotateDoublePointAsm
+        global RotateDoubleSegmentAsm
 
 ;------------------------------------------------------------------------------
-; void RotatePointAsm(const PackedPoint* dest, const PackedPoint& p, Direction dir);
+; void RotateDoublePointAsm(const PackedPoint* dest, const PackedPoint& p, Direction dir);
 ;------------------------------------------------------------------------------
-
-RotatePointAsm:
+RotateDoublePointAsm:
         vbroadcastsd ymm0, xmm0
         vbroadcastsd ymm1, xmm1
         vmovapd ymm3, [rsi]
@@ -21,10 +20,9 @@ RotatePointAsm:
         ret
 
 ;--------------------------------------------------------------------------------------------------
-; void RotateSegmentAsm(const PackedSegment* dest, const PackedSegment& s, Direction dir);
+;void RotateDoubleSegmentAsm(const PackedSegment* dest, const PackedSegment& s, Direction dir);
 ;--------------------------------------------------------------------------------------------------
-
-RotateSegmentAsm:
+RotateDoubleSegmentAsm:
         vbroadcastsd ymm0, xmm0
         vbroadcastsd ymm1, xmm1
         vmovapd ymm3, [rsi]
