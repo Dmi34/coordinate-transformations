@@ -35,9 +35,9 @@ Benchmarks and tests for both SingleGeometry and DoubleGeomentry are located in 
 
 The project uses Bazel building system. The project has a dependency on [Catch2 library](https://github.com/catchorg/Catch2) (used for testing and benchmarking).
 
-# Perforamnce
+# Performance
 
-Performance was measured using Catch2 benchmarks, with gcc 11.4.0 compiler (O0 level of optimization). Turning on higher levels of optimization causes the compiler to utilize intrinsics itself.
+Performance was measured using Catch2 benchmarks, with gcc 11.4.0 compiler (O0 level of optimization). Turning on higher levels of optimization causes the compiler to utilize intrinsics itself while compiling C++ code.
 
 For DoubleGeomentry:
 
@@ -48,9 +48,9 @@ For DoubleGeomentry:
 | TranslateAsm             | 15.913 ns              | 15.0715 ns               |
 | TranslateImm             | 18.585 ns              | 23.0546 ns               |
 | TranslateCpp             | 29.380 ns              | 55.9693 ns               |
-| :---                     |         :----:         |  ---:                    |
+| ----                     |         ----           |  ---                     |
 | RotateDoublePointAsm     | 6.968  ns              |  -                       |
-| RotateDoubleSegmentAsm    | -                      | 11.9385 ns               |
+| RotateDoubleSegmentAsm   | -                      | 11.9385 ns               |
 | RotateAsm                | 31.945 ns              | 28.6761 ns               |
 | RotateImm                | 42.069 ns              | 49.5887 ns               |
 | RotateCpp                | 53.109 ns              | 95.9351 ns               |
@@ -65,7 +65,7 @@ For SingleGeomentry:
 | TranslateAsm             | 15.913 ns              | 15.0715 ns               |
 | TranslateImm             | 18.585 ns              | 23.0546 ns               |
 | TranslateCpp             | 29.380 ns              | 55.9693 ns               |
-| :---                     |         :----:         |  ---:                    |
+| ---                      |         ----            |  ---                     |
 | RotateSinglePointAsm     | 6.968  ns              |  -                       |
 | RotateSingleSegmentAsm   | -                      | 11.9385 ns               |
 | RotateAsm                | 31.945 ns              | 28.6761 ns               |
