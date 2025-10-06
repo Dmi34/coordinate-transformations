@@ -56,6 +56,17 @@ struct Direction {
 // Points transformations
 //------------------------------------------------------------------------------
 
+extern "C" void TranslateDoublePointAsm(const PackedPoint* dest, const PackedPoint& p, Point delta);
+
+/// @param [in] p - Translatable packed point
+/// @param [in] delta - Offset
+/// @returns Translated packed point
+inline PackedPoint TranslateAsm(const PackedPoint& p, Point delta) {
+    PackedPoint result;
+    TranslateDoublePointAsm(&result, p, delta);
+    return result;
+}
+
 /// @param [in] p - Translatable packed point
 /// @param [in] delta - Offset
 /// @returns Translated packed point
@@ -66,6 +77,29 @@ inline PackedPoint TranslateImm(const PackedPoint& p, Point delta) {
     _mm256_store_pd(res.x, x_new);
     _mm256_store_pd(res.y, y_new);
     return res;
+}
+
+/// @param [in] p - Translatable packed point
+/// @param [in] delta - Offset
+/// @returns Translated packed point
+inline PackedPoint TranslateCpp(const PackedPoint& p, Point delta) {
+    PackedPoint res;
+    for (int i = 0; i < 4; i++) {
+        res.x[i] = p.x[i] + delta.x;
+        res.y[i] = p.y[i] + delta.y;
+    }
+    return res;
+}
+
+extern "C" void RotateDoublePointAsm(const PackedPoint* dest, const PackedPoint& p, Direction dir);
+
+/// @param [in] p - Rotatable packed point
+/// @param [in] angle - Rotation angle
+/// @returns Rotated packed point
+inline PackedPoint RotateAsm(const PackedPoint& p, RadianAngle angle) {
+    PackedPoint result;
+    RotateDoublePointAsm(&result, p, Direction(angle));
+    return result;
 }
 
 /// @param [in] p - Rotatable packed point
@@ -88,9 +122,34 @@ inline PackedPoint RotateImm(const PackedPoint& p, RadianAngle angle) {
     return result;
 }
 
+/// @param [in] p - Rotatable packed point
+/// @param [in] angle - Rotation angle
+/// @returns Rotated packed point
+inline PackedPoint RotateCpp(const PackedPoint& p, RadianAngle angle) {
+    const Direction dir(angle);
+    PackedPoint result;
+    for (int i = 0; i < 4; i++) {
+        const Point mem{p.x[i], p.y[i]};
+        result.x[i] = mem.x * dir.cos - mem.y * dir.sin;
+        result.y[i] = mem.x * dir.sin + mem.y * dir.cos;
+    }
+    return result;
+}
+
 //------------------------------------------------------------------------------
 // Segments transformations
 //------------------------------------------------------------------------------
+
+extern "C" void TranslateDoubleSegmentAsm(const PackedSegment* dest, const PackedSegment& s, Point delta);
+
+/// @param [in] s - Translatable packed segment
+/// @param [in] delta - Offset
+/// @returns Translated packed segment
+inline PackedSegment TranslateAsm(const PackedSegment& s, Point delta) {
+    PackedSegment result;
+    TranslateDoubleSegmentAsm(&result, s, delta);
+    return result;
+}
 
 /// @param [in] s - Translatable packed segment
 /// @param [in] delta - Offset
@@ -104,6 +163,27 @@ inline PackedSegment TranslateImm(const PackedSegment& s, Point delta) {
     _mm256_store_pd(res.finish.x, _mm256_add_pd(_mm256_load_pd(s.finish.x), packed_dx));
     _mm256_store_pd(res.finish.y, _mm256_add_pd(_mm256_load_pd(s.finish.y), packed_dy));
     return res;
+}
+
+/// @param [in] s - Translatable packed segment
+/// @param [in] delta - Offset
+/// @returns Translated packed segment
+inline PackedSegment TranslateCpp(const PackedSegment& s, Point delta) {
+    PackedSegment res;
+    res.start = TranslateCpp(s.start, delta);
+    res.finish = TranslateCpp(s.finish, delta);
+    return res;
+}
+
+extern "C" void RotateDoubleSegmentAsm(const PackedSegment* dest, const PackedSegment& s, Direction dir);
+
+/// @param [in] s - Rotatable packed segment
+/// @param [in] angle - Rotation angle
+/// @returns Rotated packed segment
+inline PackedSegment RotateAsm(const PackedSegment& s, RadianAngle angle) {
+    PackedSegment result;
+    RotateDoubleSegmentAsm(&result, s, Direction(angle));
+    return result;
 }
 
 /// @param [in] s - Rotatable packed segment
@@ -125,6 +205,16 @@ inline PackedSegment RotateImm(const PackedSegment& s, RadianAngle angle) {
     _mm256_store_pd(res.start.y, _mm256_fmadd_pd(x1, packed_sin, _mm256_mul_pd(y1, packed_cos)));
     _mm256_store_pd(res.finish.x, _mm256_fmsub_pd(x2, packed_cos, _mm256_mul_pd(y2, packed_sin)));
     _mm256_store_pd(res.finish.y, _mm256_fmadd_pd(x2, packed_sin, _mm256_mul_pd(y2, packed_cos)));
+    return res;
+}
+
+/// @param [in] s - Rotatable packed segment
+/// @param [in] angle - Rotation angle
+/// @returns Rotated packed segment
+inline PackedSegment RotateCpp(const PackedSegment& s, RadianAngle angle) {
+    PackedSegment res;
+    res.start = RotateCpp(s.start, angle);
+    res.finish = RotateCpp(s.finish, angle);
     return res;
 }
 
@@ -184,6 +274,17 @@ struct Direction {
 // Points transformations
 //------------------------------------------------------------------------------
 
+extern "C" void TranslateSinglePointAsm(const PackedPoint* dest, const PackedPoint& p, Point delta);
+
+/// @param [in] p - Translatable packed point
+/// @param [in] delta - Offset
+/// @returns Translated packed point
+inline PackedPoint TranslateAsm(const PackedPoint& p, Point delta) {
+    PackedPoint result;
+    TranslateSinglePointAsm(&result, p, delta);
+    return result;
+}
+
 /// @param [in] p - Translatable packed point
 /// @param [in] delta - Offset
 /// @returns Translated packed point
@@ -194,6 +295,29 @@ inline PackedPoint TranslateImm(const PackedPoint& p, Point delta) {
     _mm256_store_ps(res.x, x_new);
     _mm256_store_ps(res.y, y_new);
     return res;
+}
+
+/// @param [in] p - Translatable packed point
+/// @param [in] delta - Offset
+/// @returns Translated packed point
+inline PackedPoint TranslateCpp(const PackedPoint& p, Point delta) {
+    PackedPoint res;
+    for (int i = 0; i < 8; i++) {
+        res.x[i] = p.x[i] + delta.x;
+        res.y[i] = p.y[i] + delta.y;
+    }
+    return res;
+}
+
+extern "C" void RotateSinglePointAsm(const PackedPoint* dest, const PackedPoint& p, Direction dir);
+
+/// @param [in] p - Rotatable packed point
+/// @param [in] angle - Rotation angle
+/// @returns Rotated packed point
+inline PackedPoint RotateAsm(const PackedPoint& p, RadianAngle angle) {
+    PackedPoint result;
+    RotateSinglePointAsm(&result, p, Direction(angle));
+    return result;
 }
 
 /// @param [in] p - Rotatable packed point
@@ -216,9 +340,34 @@ inline PackedPoint RotateImm(const PackedPoint& p, RadianAngle angle) {
     return result;
 }
 
+/// @param [in] p - Rotatable packed point
+/// @param [in] angle - Rotation angle
+/// @returns Rotated packed point
+inline PackedPoint RotateCpp(const PackedPoint& p, RadianAngle angle) {
+    const Direction dir(angle);
+    PackedPoint result;
+    for (int i = 0; i < 8; i++) {
+        const Point mem{p.x[i], p.y[i]};
+        result.x[i] = mem.x * dir.cos - mem.y * dir.sin;
+        result.y[i] = mem.x * dir.sin + mem.y * dir.cos;
+    }
+    return result;
+}
+
 //------------------------------------------------------------------------------
 // Segments transformations
 //------------------------------------------------------------------------------
+
+extern "C" void TranslateSingleSegmentAsm(const PackedSegment* dest, const PackedSegment& s, Point delta);
+
+/// @param [in] s - Translatable packed segment
+/// @param [in] delta - Offset
+/// @returns Translated packed segment
+inline PackedSegment TranslateAsm(const PackedSegment& s, Point delta) {
+    PackedSegment result;
+    TranslateSingleSegmentAsm(&result, s, delta);
+    return result;
+}
 
 /// @param [in] s - Translatable packed segment
 /// @param [in] delta - Offset
@@ -232,6 +381,27 @@ inline PackedSegment TranslateImm(const PackedSegment& s, Point delta) {
     _mm256_store_ps(res.finish.x, _mm256_add_ps(_mm256_load_ps(s.finish.x), packed_dx));
     _mm256_store_ps(res.finish.y, _mm256_add_ps(_mm256_load_ps(s.finish.y), packed_dy));
     return res;
+}
+
+/// @param [in] s - Translatable packed segment
+/// @param [in] delta - Offset
+/// @returns Translated packed segment
+inline PackedSegment TranslateCpp(const PackedSegment& s, Point delta) {
+    PackedSegment res;
+    res.start = TranslateCpp(s.start, delta);
+    res.finish = TranslateCpp(s.finish, delta);
+    return res;
+}
+
+extern "C" void RotateSingleSegmentAsm(const PackedSegment* dest, const PackedSegment& s, Direction dir);
+
+/// @param [in] s - Rotatable packed segment
+/// @param [in] angle - Rotation angle
+/// @returns Rotated packed segment
+inline PackedSegment RotateAsm(const PackedSegment& s, RadianAngle angle) {
+    PackedSegment result;
+    RotateSingleSegmentAsm(&result, s, Direction(angle));
+    return result;
 }
 
 /// @param [in] s - Rotatable packed segment
@@ -253,6 +423,16 @@ inline PackedSegment RotateImm(const PackedSegment& s, RadianAngle angle) {
     _mm256_store_ps(res.start.y, _mm256_fmadd_ps(x1, packed_sin, _mm256_mul_ps(y1, packed_cos)));
     _mm256_store_ps(res.finish.x, _mm256_fmsub_ps(x2, packed_cos, _mm256_mul_ps(y2, packed_sin)));
     _mm256_store_ps(res.finish.y, _mm256_fmadd_ps(x2, packed_sin, _mm256_mul_ps(y2, packed_cos)));
+    return res;
+}
+
+/// @param [in] s - Rotatable packed segment
+/// @param [in] angle - Rotation angle
+/// @returns Rotated packed segment
+inline PackedSegment RotateCpp(const PackedSegment& s, RadianAngle angle) {
+    PackedSegment res;
+    res.start = RotateCpp(s.start, angle);
+    res.finish = RotateCpp(s.finish, angle);
     return res;
 }
 
